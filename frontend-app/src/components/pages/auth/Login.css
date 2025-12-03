@@ -1,0 +1,122 @@
+/* === Power Rangers Login Page === */
+
+:root {
+  --red: #D4181F;
+  --pink: #E755AF;
+  --blue: #2B4CB3;
+  --yellow: #F4D000;
+  --black: #0A0A0A;
+  --white: #FFFFFF;
+
+  --bg-violet-dark: #2e1834;
+  --bg-violet-mid: #4B0082;
+  --gold: #CC9901;
+  --pale-gold: #e6c676;
+
+  --card-glass: rgba(255, 255, 255, 0.1);
+
+  --radius: 12px;
+  --shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+}
+
+/* Page Layout */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--bg-violet-dark), var(--bg-violet-mid));
+  padding: 1rem;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Login Card */
+.login-card {
+  background: var(--card-glass);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--gold);
+  padding: 2.8rem 2rem;
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow);
+}
+
+/* Heading */
+.login-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px var(--gold);
+}
+
+/* Labels */
+.login-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--pale-gold);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Inputs */
+.login-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--pale-gold);
+  color: var(--gold);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  transition: 0.3s ease;
+}
+
+.login-input:focus {
+  box-shadow: 0 0 10px var(--pale-gold);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Error Message */
+.login-error {
+  color: #ff4b4b;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+/* Login Button */
+.login-btn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--gold);
+  color: var(--bg-violet-dark);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-shadow: 0 0 12px var(--gold);
+}
+
+.login-btn:hover {
+  background: var(--yellow);
+  transform: translateY(-2px);
+}
+
+/* Register Link */
+.login-register {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--pale-gold);
+}
+
+.login-register span {
+  color: var(--gold);
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 700;
+}

@@ -1,0 +1,176 @@
+/* === POWER RANGERS PALETTE === */
+:root {
+  --red: #D4181F;
+  --pink: #E755AF;
+  --blue: #2B4CB3;
+  --yellow: #F4D000;
+  --black: #0A0A0A;
+  --white: #FFFFFF;
+
+  --text-light: #F5F5F5;
+
+  --radius: 12px;
+  --shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+/* === BACKGROUND IMAGE VERSION === */
+.home-container {
+  position: relative;
+ 
+  min-height: 100vh;
+ 
+  /* 🖼️ POWER RANGERS IMAGE BACKGROUND */
+  background-image: url("../../assets/powerrangers-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  /* Dark overlay so text is readable */
+  background-color: rgba(0, 0, 0, 0.55);
+  background-blend-mode: darken;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+  color: var(--white);
+}
+
+/* === MORPHIN GRID OVERLAY === */
+.home-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  /* subtle grid lines */
+  background-image:
+    linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+
+  background-size: 65px 65px;
+  mix-blend-mode: overlay;
+  z-index: 0;
+}
+
+/* === Soft Glow Overlay === */
+.home-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle,
+    rgba(255,255,255,0.06) 0%,
+    transparent 70%
+  );
+  z-index: 0;
+}
+
+/* === Decorative Energy Balls === */
+.decor {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.22;
+  filter: blur(35px);
+  z-index: 0;
+}
+
+.decor-purple {
+  background: var(--blue);
+  width: 250px;
+  height: 250px;
+  top: 5%;
+  left: -60px;
+}
+
+.decor-yellow {
+  background: var(--yellow);
+  width: 300px;
+  height: 300px;
+  bottom: 0;
+  right: -80px;
+}
+
+/* === Content === */
+.content {
+  position: relative;
+  z-index: 2;
+  max-width: 750px;
+  padding: 2rem;
+}
+
+/* === Title === */
+.title {
+  font-size: 3.8rem;
+  font-weight: 900;
+  color: var(--yellow);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 2.5rem;
+  font-family: "Orbitron", sans-serif;
+  text-shadow: 0 0 18px rgba(0, 0, 0, 0.8);
+}
+
+/* === Buttons === */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.btn {
+  text-decoration: none;
+  padding: 1rem 2.8rem;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+/* LOGIN (Blue Ranger) */
+.login-btn {
+  background-color: var(--blue);
+  color: var(--white);
+  border: 2px solid var(--white);
+}
+
+.login-btn:hover {
+  background-color: transparent;
+  color: var(--white);
+  border-color: var(--blue);
+  transform: translateY(-4px);
+}
+
+/* REGISTER (Pink Ranger) */
+.register-btn {
+  background-color: var(--pink);
+  color: var(--white);
+}
+
+.register-btn:hover {
+  background-color: var(--red);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.7rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    font-size: 1.2rem;
+  }
+}

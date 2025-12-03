@@ -1,0 +1,31 @@
+
+import React from "react";
+import { Link } from "react-router-dom";
+import "./HomePage.css";
+
+export default function HomePage() {
+  return (
+    <div className="home-container">
+      {/* Optional decorative circles */}
+      <div className="decor decor-purple"></div>
+      <div className="decor decor-yellow"></div>
+
+      {/* Overlay for blur effect */}
+      <div className="overlay"></div>
+
+      {/* Main content */}
+      <div className="content">
+        <h1 className="title">🎪 Welcome to Smart Complaint Portal</h1>
+     
+        <div className="buttons">
+          <Link to="/login" className="btn login-btn">
+            Login
+          </Link>
+          <Link to="/register" className="btn register-btn">
+            Register
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
