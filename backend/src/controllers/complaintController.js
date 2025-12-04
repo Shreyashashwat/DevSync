@@ -1,6 +1,6 @@
 import Complaint from '../models/Complaint.js';
-import { sendNotification, sendEmail } from '../firebase/SendNotification.js';
-import { User } from '../model/User.js';
+// import { sendNotification, sendEmail } from '../firebase/SendNotification.js';
+import User from '../models/User.js';
 
 /**
  * Submit Complaint — Citizen creates a new complaint
