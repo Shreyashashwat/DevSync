@@ -1,8 +1,9 @@
 import Complaint from '../models/Complaint.js';
 import { sendNotification, sendEmail } from '../firebase/SendNotification.js';
-import { User } from '../model/User.js';
+import User  from '../models/User.js';
 
 /**
+ * , sendEmail
  * Submit Complaint — Citizen creates a new complaint
  * Handles: text fields + optional photo + location
  */
@@ -119,7 +120,7 @@ export const assignComplaint = async (req, res) => {
     if (complaint.assigned_to) {
       const staffUser = complaint.assigned_to;
       const title = `New Complaint Assigned: ${complaint.title}`;
-      const body = `Complaint #${complaint._id} has been assigned to you. Deadline: ${complaint.deadline ? new Date(complaint.deadline).toLocaleString() : 'N/A'}`;
+      const body = `Complaint #${complaint._id} has been assigned to you. Type: ${complaint.category}. Location: ${complaint.location?.address || 'N/A'}. Deadline: ${complaint.deadline ? new Date(complaint.deadline).toLocaleString() : 'N/A'}`;
 
       if (staffUser.fcmToken) {
         await sendNotification(staffUser.fcmToken, title, body);
@@ -132,6 +133,8 @@ export const assignComplaint = async (req, res) => {
             <p>A new complaint has been assigned to you:</p>
             <h3>${complaint.title}</h3>
             <p><strong>Description:</strong> ${complaint.description}</p>
+            <p><strong>Category:</strong> ${complaint.category}</p>
+            <p><strong>Location:</strong> ${complaint.location?.address || 'N/A'}</p>
             <p><strong>Priority:</strong> ${complaint.priority}</p>
             <p><strong>Deadline:</strong> ${complaint.deadline ? new Date(complaint.deadline).toLocaleString() : 'N/A'}</p>
             <br/>

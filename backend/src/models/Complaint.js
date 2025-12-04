@@ -61,6 +61,15 @@ const ComplaintSchema = new Schema(
       address: { type: String, trim: true },
     },
 
+    deadline: {
+      type: Date,
+      default: null,
+    },
+    lastDeadlineAlerted: {
+      type: Date,
+      default: null,
+    },
+
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
   },
