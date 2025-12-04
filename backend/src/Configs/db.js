@@ -3,7 +3,7 @@ import { sendnoti } from '../firebase/SendNotification.js';
 
 const connectDB = async () => {
   try {
-    const conn = await connect(process.env.MONGODB_URI);
+    const conn = await connect(process.env.MONGO_URI);
      console.log("sendotification function invoked");
      sendnoti();
     console.log(`MongoDB Connected: ${conn.connection.host}`);

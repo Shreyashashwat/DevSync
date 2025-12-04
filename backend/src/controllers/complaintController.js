@@ -117,7 +117,7 @@ export const assignComplaint = async (req, res) => {
       if (staffUser.email) {
         const html = `
           <div style="font-family: Arial, sans-serif; padding: 15px;">
-            <h2>📢 New Complaint Assigned!</h2>
+            <h2> New Complaint Assigned!</h2>
             <p>Hi ${staffUser.username || "there"},</p>
             <p>A new complaint has been assigned to you:</p>
             <h3>${complaint.title}</h3>
