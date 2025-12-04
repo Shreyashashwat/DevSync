@@ -11,8 +11,7 @@ import authRoutes from './src/routes/authRouts.js';
 import complaintRoutes from './src/routes/complaintRoutes.js';
 import dashboardRoutes from "./src/routes/dashboardRoutes.js";
 import userRoutes from './src/routes/userRoutes.js';
-
-
+// import saveNotificationToken from "./src/firebase/routes.js"
 const app = express();
 
 
@@ -42,8 +41,23 @@ app.use('/api/users', userRoutes);
 
 
 
+app.get('/', (req, res) => {
+  res.send('Server is working');
+});
+
+// Routes 
+app.use('/api/auth', authRoutes);
+
+app.use('/api/complaints', complaintRoutes);
+
+app.use("/api/dashboard", dashboardRoutes);
+
+app.use('/api/users', userRoutes);
+// app.use("/api/v1/save-token",saveNotificationToken)
+
+
+
+
 
 const PORT = process.env.PORT || 5000;
-
-
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

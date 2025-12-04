@@ -1,20 +1,11 @@
 import Complaint from '../models/Complaint.js';
-// import { sendNotification, sendEmail } from '../firebase/SendNotification.js';
-
-import User from '../models/User.js';
-
-/**
- * Submit Complaint — Citizen creates a new complaint
- * Handles: text fields + optional photo + location
- */
+import { sendNotification, sendEmail } from '../firebase/SendNotification.js';
+import User  from '../models/User.js';
 export const submitComplaint = async (req, res) => {
   try {
-    // Ensure user info exists
     if (!req.user || !req.user.id) {
       return res.status(401).json({ success: false, message: 'User not authenticated' });
     }
-
-    // Role check: only citizen/user can submit
     if (!'citizen'.includes(req.user.role)) {
       return res.status(403).json({ success: false, message: 'Only citizens can submit complaints' });
     }
@@ -38,7 +29,7 @@ export const submitComplaint = async (req, res) => {
     const photo_url = req.file?.path || '';
 
     const complaintData = {
-      submitted_by: req.user.id, // must match JWT payload user.id
+      submitted_by: req.user.id,
       title: title.trim(),
       description: description.trim(),
       category,
@@ -69,9 +60,7 @@ export const submitComplaint = async (req, res) => {
   }
 };
 
-/**
- * Get Complaints — returns complaints based on role
- */
+
 export const getComplaints = async (req, res) => {
   try {
     if (!req.user || !req.user.id) {
@@ -120,7 +109,7 @@ export const assignComplaint = async (req, res) => {
     if (complaint.assigned_to) {
       const staffUser = complaint.assigned_to;
       const title = `New Complaint Assigned: ${complaint.title}`;
-      const body = `Complaint #${complaint._id} has been assigned to you. Deadline: ${complaint.deadline ? new Date(complaint.deadline).toLocaleString() : 'N/A'}`;
+      const body = `Complaint #${complaint._id} has been assigned to you. Type: ${complaint.category}. Location: ${complaint.location?.address || 'N/A'}. Deadline: ${complaint.deadline ? new Date(complaint.deadline).toLocaleString() : 'N/A'}`;
 
       if (staffUser.fcmToken) {
         await sendNotification(staffUser.fcmToken, title, body);
@@ -128,11 +117,13 @@ export const assignComplaint = async (req, res) => {
       if (staffUser.email) {
         const html = `
           <div style="font-family: Arial, sans-serif; padding: 15px;">
-            <h2>📢 New Complaint Assigned!</h2>
+            <h2> New Complaint Assigned!</h2>
             <p>Hi ${staffUser.username || "there"},</p>
             <p>A new complaint has been assigned to you:</p>
             <h3>${complaint.title}</h3>
             <p><strong>Description:</strong> ${complaint.description}</p>
+            <p><strong>Category:</strong> ${complaint.category}</p>
+            <p><strong>Location:</strong> ${complaint.location?.address || 'N/A'}</p>
             <p><strong>Priority:</strong> ${complaint.priority}</p>
             <p><strong>Deadline:</strong> ${complaint.deadline ? new Date(complaint.deadline).toLocaleString() : 'N/A'}</p>
             <br/>
