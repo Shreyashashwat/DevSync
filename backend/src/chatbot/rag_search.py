@@ -79,3 +79,24 @@ def call_gemini(prompt: str) -> str:
         return f"Gemini API Error: {e.response.status_code} - {e.response.text}"
     except Exception as e:
         return f"Error: {e}"
+    
+def answer_question(query: str, user: str = None) -> str:
+    results = search_qdrant(query, user, top_k=5)
+
+    if not results:
+        return "I don't have any relevant information."
+
+    context = "\n\n".join([
+        f"[{i+1}] {r['filename']}\n{r['content']}"
+        for i, r in enumerate(results)
+    ])
+
+    prompt = f"""Answer only from the documents below. If unsure, say "I don't know."
+
+Documents:
+{context}
+
+Question: {query}
+Answer:"""
+
+    return call_gemini(prompt)
