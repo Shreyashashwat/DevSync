@@ -1,5 +1,14 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import CommentSection from "./CommentSection";
+
+const COLORS = {
+  violetDark: "#2e1834",
+  violetMid: "#4B0082",
+  gold: "#CC9901",
+  white: "#ffffff",
+};
 
 export default function ComplaintLifecycle() {
   const [complaints, setComplaints] = useState([]);
@@ -11,7 +20,6 @@ export default function ComplaintLifecycle() {
     setError("");
 
     const token = localStorage.getItem("token");
-
     if (!token) {
       setError("You must be logged in to view complaints.");
       setLoading(false);
@@ -25,7 +33,12 @@ export default function ComplaintLifecycle() {
 
       setComplaints(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch complaints");
+      console.error("Error fetching complaints:", err);
+      setError(
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to fetch complaints"
+      );
       setComplaints([]);
     } finally {
       setLoading(false);
@@ -38,16 +51,25 @@ export default function ComplaintLifecycle() {
 
   if (loading)
     return (
-      <p className="text-[#B4FF5A] font-semibold text-lg">Loading complaints...</p>
+      <p style={{ color: COLORS.gold, fontWeight: "bold" }}>
+        Loading complaints...
+      </p>
     );
 
   if (error)
     return (
-      <div className="text-[#B4FF5A]">
+      <div style={{ color: COLORS.gold, fontFamily: "Poppins, sans-serif" }}>
         <p>Error: {error}</p>
         <button
           onClick={fetchComplaints}
-          className="mt-3 px-4 py-2 bg-[#3CFF8F]/20 text-white font-semibold border border-[#3CFF8F]/40 rounded-xl hover:bg-[#3CFF8F]/30 transition"
+          style={{
+            backgroundColor: COLORS.violetDark,
+            color: COLORS.white,
+            padding: "0.5rem 1rem",
+            borderRadius: "6px",
+            cursor: "pointer",
+            border: "none",
+          }}
         >
           Retry
         </button>
@@ -55,72 +77,88 @@ export default function ComplaintLifecycle() {
     );
 
   return (
-    <div className="space-y-5 mt-4">
-
-      {complaints.length === 0 ? (
-        <p className="text-[#B4FF5A]">No complaints submitted yet.</p>
-      ) : (
-        complaints.map((c) => (
-          <div
-            key={c._id}
-            className="
-              bg-white/10 
-              backdrop-blur-xl 
-              rounded-2xl
-              border border-[#3CFF8F]/40
-              shadow-[0_8px_32px_rgba(0,0,0,0.37)]
-              p-6 
-              text-white
-              transition 
-              hover:scale-[1.02]
-              hover:shadow-[0_0_20px_#3CFF8F]
-            "
+    <div style={{ fontFamily: "Poppins, sans-serif", padding: "0.5rem 0.8rem" }}>
+  {complaints.length === 0 ? (
+    <p style={{ color: "#CCFF99" }}>No complaints submitted yet.</p>
+  ) : (
+    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+      {complaints.map((c) => (
+        <li
+          key={c._id}
+          style={{
+            marginBottom: "0.9rem",
+            padding: "0.75rem 1rem",
+            borderRadius: "8px",
+            backgroundColor: "rgba(0, 40, 0, 0.35)",
+            border: "1px solid rgba(0,255,0,0.25)",
+            boxShadow: "0 0 10px rgba(0,255,0,0.18)",
+            color: "#e8ffe8",
+            backdropFilter: "blur(3px)",
+            transition: "transform 0.2s, box-shadow 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.015)";
+            e.currentTarget.style.boxShadow =
+              "0 0 14px rgba(0,255,0,0.35)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.boxShadow =
+              "0 0 10px rgba(0,255,0,0.18)";
+          }}
+        >
+          <h3
+            style={{
+              margin: "0 0 0.3rem 0",
+              color: "#66ff99",
+              fontSize: "1rem",
+              fontWeight: "600"
+            }}
           >
-            {/* TITLE */}
-            <h3 className="text-[#7CFFD8] text-xl font-bold mb-2 drop-shadow-[0_0_5px_#3CFF8F]">
-              {c.title}
-            </h3>
+            {c.title}
+          </h3>
 
-            {/* DESCRIPTION */}
-            <p className="text-gray-200 mb-3">{c.description}</p>
+          <p style={{ margin: "0.25rem 0", fontSize: "0.9rem" }}>
+            {c.description}
+          </p>
 
-            {/* STATUS */}
-            <p className="text-[#B4FF5A] text-sm mb-1">
-              <span className="font-semibold">Status:</span> {c.status || "OPEN"}
+          <p style={{ margin: "0.15rem 0", fontSize: "0.75rem", color: "#b6ffb6" }}>
+            Status: {c.status || "OPEN"}
+          </p>
+
+          {c.submitted_by && (
+            <p style={{ margin: "0.15rem 0", fontSize: "0.75rem", color: "#b6ffb6" }}>
+              Submitted by: {c.submitted_by.username} ({c.submitted_by.email})
             </p>
+          )}
 
-            {/* SUBMITTED BY */}
-            {c.submitted_by && (
-              <p className="text-gray-300 text-sm mb-1">
-                Submitted by:{" "}
-                <span className="text-[#7CFFD8]">
-                  {c.submitted_by.username} ({c.submitted_by.email})
-                </span>
-              </p>
-            )}
+          {c.createdAt && (
+            <p style={{ margin: "0.15rem 0", fontSize: "0.75rem", color: "#b6ffb6" }}>
+              Date: {new Date(c.createdAt).toLocaleString()}
+            </p>
+          )}
 
-            {/* DATE */}
-            {c.createdAt && (
-              <p className="text-gray-400 text-xs mb-3">
-                Date: {new Date(c.createdAt).toLocaleString()}
-              </p>
-            )}
+          {c.photo_url && (
+            <img
+              src={c.photo_url}
+              alt="Complaint"
+              style={{
+                maxWidth: "100%",
+                marginTop: "0.5rem",
+                borderRadius: "5px",
+                border: "1px solid rgba(0,255,0,0.3)"
+              }}
+            />
+          )}
 
-            {/* PHOTO */}
-            {c.photo_url && (
-              <img
-                src={c.photo_url}
-                alt="Complaint"
-                className="
-                  w-full mt-3 rounded-xl 
-                  border border-[#7CFFD8]/30 
-                  shadow-[0_0_12px_#7CFFD8]/30
-                "
-              />
-            )}
+          <div style={{ marginTop: "0.5rem" }}>
+            <CommentSection complaintId={c._id} />
           </div>
-        ))
-      )}
-    </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
   );
 }

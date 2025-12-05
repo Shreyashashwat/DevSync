@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../../api/axiosInstance";
+import CommentSection from "../Citizen/CommentSection"; 
 
-export default function StaffDashboard() {
+const StaffDashboard = () => {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(null);
@@ -30,19 +31,16 @@ export default function StaffDashboard() {
     try {
       setUpdating(complaintId);
       const token = localStorage.getItem("token");
-
       await axiosInstance.patch(
         "/api/complaints/status",
         { complaintId, status: newStatus },
         { headers: { "x-auth-token": token } }
       );
-
       setComplaints((prev) =>
         prev.map((c) =>
           c._id === complaintId ? { ...c, status: newStatus } : c
         )
       );
-
       setUpdating(null);
     } catch (err) {
       console.error("Error updating status:", err);
@@ -51,135 +49,216 @@ export default function StaffDashboard() {
     }
   };
 
+  // Filter, search, and sort complaints
   const filteredComplaints = complaints
-    .filter((c) =>
-      (filters.status === "All" || c.status === filters.status) &&
-      (filters.priority === "All" || c.priority === filters.priority) &&
-      (c.title.toLowerCase().includes(search.toLowerCase()))
+    .filter(
+      (c) =>
+        (filters.status === "All" || c.status === filters.status) &&
+        (filters.priority === "All" || c.priority === filters.priority) &&
+        (c.title.toLowerCase().includes(search.toLowerCase()) ||
+          c.category.toLowerCase().includes(search.toLowerCase()))
     )
     .sort((a, b) => {
       if (sortBy === "latest") return new Date(b.createdAt) - new Date(a.createdAt);
       if (sortBy === "oldest") return new Date(a.createdAt) - new Date(b.createdAt);
       if (sortBy === "priority") {
-        const order = { High: 3, Medium: 2, Low: 1 };
-        return order[b.priority] - order[a.priority];
+        const priorityOrder = { High: 3, Medium: 2, Low: 1 };
+        return priorityOrder[b.priority] - priorityOrder[a.priority];
       }
+      return 0;
     });
 
-  if (loading)
-    return (
-      <p className="text-center mt-20 text-[#7AFF57] font-semibold text-lg">
-        Loading complaints...
-      </p>
-    );
+  if (loading) return <p style={{ color: "#b6ffb6" }}>Loading complaints...</p>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#00160D] via-[#003A20] to-[#000d05] text-white p-6">
+    <div
+      style={{
+        padding: "2rem",
+        fontFamily: "Poppins, sans-serif",
+        background: "rgba(0, 30, 0, 0.7)",
+        minHeight: "100vh",
+        color: "#e8ffe8",
+        backdropFilter: "blur(4px)",
+      }}
+    >
+      <h2 style={{ color: "#66ff99", marginBottom: "1rem" }}>Staff Dashboard</h2>
 
-      {/* Title */}
-      <h2 className="text-3xl font-orbitron font-bold text-[#7AFF57] mb-6 drop-shadow- mt-18">
-        Staff Dashboard
-      </h2>
-
-      {/* Filters Section */}
-      <div className="flex flex-wrap gap-4 mb-6 bg-[#003A20]/20 backdrop-blur-xl p-4 rounded-xl border border-[#39FF14]/30 shadow-[0_0_9px_#39FF14]/30">
-
-        {/* Search */}
+      {/* Search & Filters */}
+      <div
+        style={{
+          display: "flex",
+          gap: "1rem",
+          marginBottom: "1.5rem",
+          flexWrap: "wrap",
+        }}
+      >
         <input
           type="text"
-          placeholder="Search by title..."
-          className="flex-1 px-4 py-2 rounded-lg bg-black/40 border border-[#39FF14]/40 focus:border-[#39FF14] outline-none text-[#A6FFCB]"
+          placeholder="Search by title or category"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          style={{
+            padding: "0.5rem",
+            borderRadius: "6px",
+            border: "1px solid rgba(0,255,0,0.4)",
+            background: "rgba(0, 40, 0, 0.35)",
+            color: "#e8ffe8",
+            flex: "1",
+            minWidth: "200px",
+          }}
         />
 
         {/* Status Filter */}
-        <select
-          value={filters.status}
-          onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-          className="px-4 py-2 rounded-lg bg-[#39FF14]/30 text-white font-semibold shadow-lg border border-[#39FF14]/40"
-        >
-          {["All", "OPEN", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"].map((s) => (
-            <option key={s} value={s} className="bg-black text-white">
-              {s}
-            </option>
-          ))}
-        </select>
+        <div>
+          <label style={{ color: "#b6ffb6" }}>Status: </label>
+          <select
+            value={filters.status}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, status: e.target.value }))
+            }
+            style={{
+              padding: "0.4rem 0.6rem",
+              borderRadius: "6px",
+              border: "none",
+              background: "rgba(0,255,0,0.25)",
+              color: "#003300",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            {["All", "OPEN", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"].map(
+              (status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              )
+            )}
+          </select>
+        </div>
 
         {/* Priority Filter */}
-        <select
-          value={filters.priority}
-          onChange={(e) => setFilters({ ...filters, priority: e.target.value })}
-          className="px-4 py-2 rounded-lg bg-[#39FF14]/30 text-white font-semibold shadow-lg border border-[#39FF14]/40"
-        >
-          {["All", "Low", "Medium", "High"].map((p) => (
-            <option key={p} className="bg-black text-white">
-              {p}
-            </option>
-          ))}
-        </select>
+        <div>
+          <label style={{ color: "#b6ffb6" }}>Priority: </label>
+          <select
+            value={filters.priority}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, priority: e.target.value }))
+            }
+            style={{
+              padding: "0.4rem 0.6rem",
+              borderRadius: "6px",
+              border: "none",
+              background: "rgba(0,255,0,0.25)",
+              color: "#003300",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            {["All", "Low", "Medium", "High"].map((priority) => (
+              <option key={priority} value={priority}>
+                {priority}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Sort */}
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="px-4 py-2 rounded-lg bg-[#39FF14]/30 text-white font-semibold shadow-lg border border-[#39FF14]/40"
-        >
-          <option value="latest" className="bg-black text-white">Latest</option>
-          <option value="oldest" className="bg-black text-white">Oldest</option>
-          <option value="priority" className="bg-black text-white">Priority</option>
-        </select>
+        <div>
+          <label style={{ color: "#b6ffb6" }}>Sort: </label>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            style={{
+              padding: "0.4rem 0.6rem",
+              borderRadius: "6px",
+              border: "none",
+              background: "rgba(0,255,0,0.25)",
+              color: "#003300",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            <option value="latest">Latest</option>
+            <option value="oldest">Oldest</option>
+            <option value="priority">Priority</option>
+          </select>
+        </div>
       </div>
 
-      {/* Complaint List */}
-      <div className="flex flex-col gap-5">
-        {filteredComplaints.length === 0 && (
-          <p className="text-[#A6FFCB]">No complaints found.</p>
-        )}
-
+      {/* Complaint Cards */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
         {filteredComplaints.map((c) => (
           <div
             key={c._id}
-            className="bg-[#00160D]/70 border border-[#39FF14]/30 rounded-xl shadow-[0_0_20px_#39FF1430] p-5 backdrop-blur-xl"
+            style={{
+              background: "rgba(0, 40, 0, 0.35)",
+              border: "1px solid rgba(0,255,0,0.25)",
+              borderRadius: "8px",
+              boxShadow: "0 0 12px rgba(0,255,0,0.15)",
+              padding: "0.8rem 1rem",
+              backdropFilter: "blur(3px)",
+            }}
           >
-            <h3 className="text-xl font-semibold text-[#7AFF57]">
-              {c.title} <span className="text-[#39FF14]">({c.status})</span>
+            <h3 style={{ margin: "0 0 0.3rem 0", color: "#66ff99" }}>
+              {c.title}
+              <span style={{ fontWeight: "normal", color: "#b6ffb6" }}>
+                {" "}
+                - {c.status}
+              </span>
             </h3>
 
-            <p className="mt-1 text-[#D9FFE8]">{c.description}</p>
-
-            <p className="text-sm mt-2 text-[#7AFF57]">
-              <strong>Category:</strong> {c.category} &nbsp;|&nbsp;
-              <strong>Priority:</strong> {c.priority}
+            <p style={{ margin: "0.25rem 0" }}>{c.description}</p>
+            <p style={{ margin: "0.15rem 0", fontSize: "0.8rem", color: "#b6ffb6" }}>
+              Category: {c.category} | Priority: {c.priority}
             </p>
 
-            {/* Image */}
             {c.photo_url && (
               <img
                 src={c.photo_url}
                 alt="Complaint"
-                className="rounded-lg mt-3 border border-[#39FF14] shadow-lg"
+                style={{
+                  maxWidth: "100%",
+                  borderRadius: "5px",
+                  border: "1px solid rgba(0,255,0,0.25)",
+                  marginTop: "0.4rem",
+                }}
               />
             )}
 
-            <div className="mt-4">
-              <label className="mr-2 text-[#A6FFCB]">Update Status:</label>
+            {/* COMMENT SECTION FOR STAFF */}
+            <div style={{ marginTop: "0.6rem" }}>
+              <CommentSection complaintId={c._id} />
+            </div>
 
+            {/* STATUS UPDATE  */}
+            <div style={{ marginTop: "0.6rem" }}>
+              <label style={{ marginRight: "0.4rem", color: "#b6ffb6" }}>
+                Update Status:
+              </label>
               <select
                 value={c.status}
-                disabled={updating === c._id}
                 onChange={(e) => handleStatusChange(c._id, e.target.value)}
-                className="px-3 py-2 rounded-lg bg-[#39FF14]/30 text-white border border-[#39FF14]/40 shadow hover:bg-[#39FF14]/40 cursor-pointer"
+                disabled={updating === c._id}
+                style={{
+                  padding: "0.35rem 0.6rem",
+                  borderRadius: "6px",
+                  border: "none",
+                  background: "rgba(0,255,0,0.25)",
+                  color: "#003300",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
               >
-                {["OPEN", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"].map((s) => (
-                  <option key={s} className="bg-black text-white">
-                    {s}
-                  </option>
-                ))}
+                {["OPEN", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"].map(
+                  (status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  )
+                )}
               </select>
-
               {updating === c._id && (
-                <span className="ml-3 text-[#7AFF57] animate-pulse">Updating...</span>
+                <span style={{ marginLeft: "0.4rem" }}>Updating...</span>
               )}
             </div>
           </div>
@@ -187,4 +266,6 @@ export default function StaffDashboard() {
       </div>
     </div>
   );
-}
+};
+
+export default StaffDashboard;
