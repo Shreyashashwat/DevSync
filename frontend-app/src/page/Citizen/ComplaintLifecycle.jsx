@@ -77,7 +77,7 @@ export default function ComplaintLifecycle() {
             "
           >
             {/* TITLE */}
-            <h3 className="text-[#7CFFD8] text-xl font-bold mb-2 drop-shadow-[0_0_5px_#3CFF8F]">
+            <h3 className="text-[#ffffff] text-xl font-bold mb-2 drop-shadow-[0_0_1px_#3CFF8F]">
               {c.title}
             </h3>
 

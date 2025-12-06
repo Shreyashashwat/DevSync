@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axiosInstance from "../../../api/axiosInstance";
-
+import axiosInstance from "../../api/axiosInstance";
+import axios from "axios";
+import StatCard from "../../components/StatCard";
 export default function StaffDashboard() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -8,15 +9,19 @@ export default function StaffDashboard() {
   const [filters, setFilters] = useState({ status: "All", priority: "All" });
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("latest");
+  const [stats, setStats] = useState(null);
 
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axiosInstance.get("/api/complaints", {
-          headers: { "x-auth-token": token },
-        });
+        const res = await axiosInstance.get("/api/complaints");
         setComplaints(res.data);
+        const statsRes = await axiosInstance.get("/api/users/stats",
+
+        );
+setStats(statsRes.data);
+        
         setLoading(false);
       } catch (err) {
         console.error("Error fetching complaints:", err);
@@ -78,8 +83,18 @@ export default function StaffDashboard() {
 
       {/* Title */}
       <h2 className="text-3xl font-orbitron font-bold text-[#7AFF57] mb-6 drop-shadow- mt-18">
-        Staff Dashboard
+       ENGINEER Dashboard
       </h2>
+      {stats && (
+  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+    <StatCard label="Total Assigned" value={stats.total} color="#7AFF57" />
+    <StatCard label="Open" value={stats.open} color="#FFD93C" />
+    <StatCard label="In Progress" value={stats.inProgress} color="#00CFFF" />
+    <StatCard label="Resolved" value={stats.resolved} color="#4CAF50" />
+    <StatCard label="Closed" value={stats.closed} color="#9CA3AF" />
+    <StatCard label="SLA Breaches" value={stats.slaViolations} color="#FF4444" />
+  </div>
+)}
 
       {/* Filters Section */}
       <div className="flex flex-wrap gap-4 mb-6 bg-[#003A20]/20 backdrop-blur-xl p-4 rounded-xl border border-[#39FF14]/30 shadow-[0_0_9px_#39FF14]/30">
@@ -99,7 +114,7 @@ export default function StaffDashboard() {
           onChange={(e) => setFilters({ ...filters, status: e.target.value })}
           className="px-4 py-2 rounded-lg bg-[#39FF14]/30 text-white font-semibold shadow-lg border border-[#39FF14]/40"
         >
-          {["All", "OPEN", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"].map((s) => (
+          {["All", "OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"].map((s) => (
             <option key={s} value={s} className="bg-black text-white">
               {s}
             </option>
@@ -171,7 +186,7 @@ export default function StaffDashboard() {
                 onChange={(e) => handleStatusChange(c._id, e.target.value)}
                 className="px-3 py-2 rounded-lg bg-[#39FF14]/30 text-white border border-[#39FF14]/40 shadow hover:bg-[#39FF14]/40 cursor-pointer"
               >
-                {["OPEN", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"].map((s) => (
+                {["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"].map((s) => (
                   <option key={s} className="bg-black text-white">
                     {s}
                   </option>
