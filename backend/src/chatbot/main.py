@@ -6,7 +6,7 @@ from vector_sync import run_background_sync
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("RAG service starting... Syncing MongoDB → Qdrant")
-    run_background_sync()   # Starts the background sync thread
+    run_background_sync()   #Starts the background sync thread
     yield
     print("RAG service stopped.")
 

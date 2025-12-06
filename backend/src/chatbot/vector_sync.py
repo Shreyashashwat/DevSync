@@ -43,7 +43,7 @@ def upsert_vector(doc: dict):
             
             "user": str(doc.get("submitted_by", "unknown")),
             
-            # 3. Store extra metadata (useful if you want to filter by these later)
+            #Store extra metadata 
             "category": doc.get("category", "General"),
             "priority": doc.get("priority", "Low"),
             "status": doc.get("status", "Open"),
