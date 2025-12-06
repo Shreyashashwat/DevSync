@@ -26,13 +26,11 @@ def search_qdrant(query: str, user: str = None, top_k: int = 5):
 
     contexts = []
     for hit in hits:
-        # 1. Fetch the full document from MongoDB using the ID stored in Qdrant
         if hit.payload and "doc_id" in hit.payload:
             doc_id = hit.payload["doc_id"]
             doc = docs.find_one({"_id": ObjectId(doc_id)})
             
             if doc:
-                # 2. Extract specific Complaint fields (Updated for your DB structure)
                 title = doc.get("title", "Untitled Complaint")
                 desc = doc.get("description", "No description")
                 status = doc.get("status", "Unknown")
@@ -40,7 +38,6 @@ def search_qdrant(query: str, user: str = None, top_k: int = 5):
                 priority = doc.get("priority", "N/A")
                 remarks = doc.get("remarks", "")
 
-                # 3. Format the text so Gemini understands the context
                 formatted_text = (
                     f"Title: {title}\n"
                     f"Category: {category} | Priority: {priority} | Status: {status}\n"
@@ -50,7 +47,7 @@ def search_qdrant(query: str, user: str = None, top_k: int = 5):
 
                 contexts.append({
                     "content": formatted_text,
-                    "filename": title,  # Using Title as the "filename" for citation
+                    "filename": title,  
                     "score": hit.score
                 })
     return contexts
