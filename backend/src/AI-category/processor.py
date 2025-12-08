@@ -60,3 +60,37 @@ def get_category(title: str) -> str:
     
     return best_cat if best_score >= 0.65 else "Others"
     
+def get_priority(description: str) -> str:
+    low_keywords = [
+        "suggestion", "suggest", "request", "please install", "please put", "please provide",
+        "idea", "feedback", "opinion", "would be good", "better if", "kindly consider",
+        "want", "wish", "hope", "new park", "new bench", "paint", "beautification",
+        "tree", "plant", "garden", "playground", "swing", "slide"
+    ]
+    
+    desc_lower = description.lower()
+    
+    if any(kw in desc_lower for kw in low_keywords):
+        return "low"
+    prompt = f"""
+    You are a priority classifier for complaints. Classify the priority as 'high', 'medium', or 'low' based on urgency and impact.
+
+    Guidelines:
+    - High: Immediate danger to life, health, or property. Keywords: emergency, urgent, critical, danger, fire, leak, injury, explosion, threat, life-threatening, outage (power/water), broken (essential), not working (critical services).
+      Examples: "Fire in building, people trapped", "Gas leak smelling strong", "Power outage in hospital", "Flooding causing structural damage".
+    
+    - Medium: Significant issues affecting daily life but not immediate danger. Keywords: delay, issue, problem, malfunction, billing error, charge dispute, slow service, defect.
+      Examples: "Street light not working", "Billing overcharge", "Delayed garbage collection", "Minor water drip".
+    
+    - Low: Suggestions, minor inconveniences, or non-urgent feedback. Keywords: suggestion, feedback, minor, improvement, query, request, cosmetic.
+      Examples: "Suggestion for better park benches", "General inquiry about services", "Minor cosmetic repair needed".
+
+    Analyze the description: '{description}'
+    Return ONLY the priority level: 'high', 'medium', or 'low'. No explanations.
+    """
+    resp = gemini.generate_content(prompt)
+    priority = resp.text.strip().lower()
+
+    if priority not in ["high", "medium", "low"]:
+        priority = "low"
+    return priority
