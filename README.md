@@ -173,23 +173,20 @@ npm run dev
 
 ### Complaint Submission Form
 <p align="center">
-  <img src="./frontend-app/src/assets/complaint-form.png?raw=true" width="450" />
+  <img src="./frontend-app/src/assets/login.png?raw=true" width="450" />
 </p>
 
 ### Admin Dashboard with Stats
 <p align="center">
-  <img src="./frontend-app/src/assets/dashboard.png?raw=true" width="700" />
+  <img src="./frontend-app/src/assets/admin.png?raw=true" width="700" />
 </p>
 
 ### SLA Timer 
 <p align="center">
-  <img src="./frontend-app/src/assets/stats.png?raw=true" width="700" />
+  <img src="./frontend-app/src/assets/staff.png?raw=true" width="700" />
 </p>
 
-### Engineer Assignment View
-<p align="center">
-  <img src="./frontend-app/src/assets/assign.png?raw=true" width="700" />
-</p>
+
 
 ---
 
