@@ -1,241 +1,270 @@
-<img src="./logo.png" width="500"/>
-<div align="center">
-⚡ POWER-GRIFO — Fault Analyzer
+<p align="center">
+  <img src="./frontend-app/src/assets/logo.png?raw=true" width="450" />
+</p>
 
-Automated fault logging, pattern detection, dashboard analytics & real-time admin monitoring.
+# POWER-GRIFO — Fault Analyzer
 
+---
 
+## 1. Overview
 
+POWER-GRIFO is a full-stack fault tracking and management system.  
+Users can submit complaints with relevant information, and administrators can monitor, assign, and review issues from a single dashboard. The goal is to simplify fault logging, reduce repeated issues, and improve resolution time through clear analytics.
 
+---
 
+## 2. Problem Statement
 
+**PS Number:** PS-XX  
 
+Fault reporting is typically poorly organized, often spread across WhatsApp messages, email threads, and verbal communication. This leads to:
 
-</div>
-📑 Table of Contents
+- Repeated complaints  
+- Delays in resolution  
+- No visibility into issue trends  
 
-🚀 Project Overview
+POWER-GRIFO centralizes this entire workflow into one application.
 
-🧩 Problem Statement
+---
 
-✨ Features Implemented
+## 3. Feature Implementation Summary
 
-🛠️ Tech Stack
+### 3.1 Basic Functionalities — Completed
 
-🏗️ System Architecture
+- Login and role-based access  
+- Raise new complaints  
+- Assign engineers to issues  
+- SLA timers  
+- Comment thread on each issue  
+- Status tracker (Open, Assigned, In-Progress, Resolved, Closed)  
+- Dashboard with real-time stats  
 
-📡 API Documentation
+### 3.2 Advanced Functionalities — Completed
 
-⚙️ Setup Instructions
+- Email/SMS alerts  
+- Multi-role access separation  
+- Bulk operations on complaints  
+- Real-time UI feedback  
 
-🚀 Deployment Links
+### 3.3 Preferred Tech — Implemented
 
-🖼️ Screenshots
+- React frontend  
+- Node.js backend  
+- MongoDB database  
+- Redis cache and rate limiting  
 
-🛡️ Error Handling
+### 3.4 Brownie Points / Additional Enhancements
 
-🤖 AI--ML Integration
+- Docker support  
+- Worker queue logic for heavy operations  
+- Role-based dashboards  
 
-👥 Team
+---
 
-🚧 Future Improvements
+## 4. Extra Features (Beyond Requirements)
 
-✔️ GitHub Hygiene
+- Cloudinary-based image uploads  
+- Centralized error handling middleware  
+- Rate limiter on both login and complaint submission  
+- Redis caching on repeated requests  
+- Search, pagination & filters  
+- Engineer workload stats on dashboard  
+- SLA breach counter  
+- Priority levels for complaints  
 
-💬 Final Note
+---
 
-🚀 Project Overview
+## 5. Dashboard Statistics (Generated Automatically)
 
-POWER-GRIFO Fault Analyzer is a cloud-integrated, fault-logging and admin analytics system for recording user complaints, detecting repeated issues automatically, and providing real-time insights through an interactive dashboard.
+The system generates internal performance data such as:
 
-It is designed with:
+- Total complaints  
+- Status counts (Open, Assigned, Resolved, Closed)  
+- Average resolution time  
+- Engineer-wise complaint distribution  
+- Daily / weekly / monthly complaint trends  
+- SLA expired cases  
+- Most frequent complaint categories  
 
-Speed
+---
 
-Reliability
+## 6. Tech Stack
 
-Security
+**Frontend**  
+React, Tailwind CSS, ShadCN UI
 
-Scalable Architecture
+**Backend**  
+Node.js, Express.js, JWT Authentication
 
-🧩 Problem Statement
+**Database & Cloud**  
+MongoDB Atlas, Cloudinary, Redis
 
-PS Number: PS–XX
+**Deployment**  
+Vercel/Netlify (frontend), Render/Railway (backend)
 
-Users submit technical complaints/issues through multiple channels, causing:
+---
 
-Duplicate requests
+## 7. System Architecture
 
-Delays in resolution
+Frontend (React)
+|
+| REST API
+|
+Backend (Express + JWT)
+|
+| | |
+MongoDB Redis Cloudinary
 
-Lack of analytics
-POWER-GRIFO centralizes and digitizes the entire flow, enabling smart complaint monitoring and analysis.
+yaml
+Copy code
 
-✨ Features Implemented
+---
 
-✅ Authentication & Authorization
+## 8. API Documentation (Short Overview)
 
-JWT based login/register
+**POST /api/auth/register** — register user  
+**POST /api/auth/login** — login and receive JWT  
+**POST /api/complaints** — submit new complaint  
+**GET /api/complaints** — retrieve all complaints  
+**GET /api/complaints/:id** — retrieve specific complaint  
+**DELETE /api/complaints/:id** — remove complaint (admin only)
 
-Role based access (User/Admin)
+---
 
-⚠️ Rate Limiting
+## 9. Setup Instructions
 
-Prevent spam submission
+### Backend
 
-Restrict complaints count per user
-
-🧾 Complaint Management
-
-Submit complaint + file upload
-
-View list of complaints
-
-Admin approval system
-
-🧠 Smart Analysis
-
-Detect repeated fault patterns
-
-Redis caching + quick lookup
-
-📦 Cloud Integrations
-
-MongoDB Atlas
-
-Cloudinary for image uploads
-
-Redis for caching
-
-📊 Admin Dashboard
-
-Filter & sort complaints
-
-Real-time updates
-
-🛠️ Tech Stack
-Frontend:
-  - React
-  - TailwindCSS
-  - ShadCN UI
-
-Backend:
-  - Node.js
-  - Express.js
-  - JWT Authentication
-
-Database:
-  - MongoDB (Mongoose)
-
-Cloud / Services:
-  - Cloudinary
-  - Redis
-
-Deployment:
-  - Render / Railway (Backend)
-  - Vercel / Netlify (Frontend)
-
-🏗️ System Architecture
-flowchart TD
-A[Frontend - React] --> B[Express API]
-B --> C[(MongoDB Atlas)]
-B --> D[(Redis Cache)]
-B --> E[(Cloudinary Storage)]
-
-📡 API Documentation
-
-👉 Add real route examples once finalized.
-
-🔑 Auth
-Method	Route	Description
-POST	/api/auth/register	Register user
-POST	/api/auth/login	Login user
-📝 Complaints
-Method	Route	Description
-POST	/api/complaints	Submit complaint
-GET	/api/complaints	Get all complaints
-GET	/api/complaints/:id	Get single complaint
-DELETE	/api/complaints/:id	Delete complaint
-⚙️ Setup Instructions
-🔧 Backend Setup
 cd backend
 npm install
 
+bash
+Copy code
 
-Create .env:
+Create `.env`:
 
 PORT=5000
-MONGO_URI=xxx
-JWT_SECRET=xxx
-CLOUDINARY_CLOUD_NAME=xxx
-CLOUDINARY_API_KEY=xxx
-CLOUDINARY_API_SECRET=xxx
-REDIS_URL=xxx
+MONGO_URI=your_mongo_uri
+JWT_SECRET=your_secret
+CLOUDINARY_CLOUD_NAME=value
+CLOUDINARY_API_KEY=value
+CLOUDINARY_API_SECRET=value
+REDIS_URL=value
+
+powershell
+Copy code
+
+Start backend:
 
 npm run dev
 
-🎨 Frontend Setup
-cd frontend
+shell
+Copy code
+
+### Frontend
+
+cd frontend-app
 npm install
 npm run dev
 
-🚀 Deployment Links
+yaml
+Copy code
 
-⚠️ Update before submission
+---
 
-🌐 Live App: https://
-🛠️ API: https://
-📁 GitHub: https://github.com/
-...
+## 10. Deployment Links
 
-🖼️ Screenshots
-UI Screen	Preview
-Login Page	🖼️
-Complaint Form	🖼️
-Admin Dashboard	🖼️
-Fault Analysis Table	🖼️
-🛡️ Error Handling
+(Add before evaluation)
 
-Global error middleware in Express
+Frontend:  
+Backend API:  
+GitHub Repository:  
 
-Async wrapper for controllers
+---
 
-Proper HTTP status codes
+## 11. Screenshots
 
-Validation for file upload & JSON input
+> Add screenshots to a folder such as `/assets` or  
+> `./frontend-app/src/assets/` and update paths below as needed.
 
-Redis-based request limiting
+### Login Page
+<p align="center">
+  <img src="./frontend-app/src/assets/login.png?raw=true" width="450" />
+</p>
 
-🤖 AI/ML Integration
+### Complaint Submission Form
+<p align="center">
+  <img src="./frontend-app/src/assets/complaint-form.png?raw=true" width="450" />
+</p>
 
-If not used, write: N/A
+### Admin Dashboard with Stats
+<p align="center">
+  <img src="./frontend-app/src/assets/dashboard.png?raw=true" width="700" />
+</p>
 
-Example (optional):
+### SLA Timer & Priority Indicators
+<p align="center">
+  <img src="./frontend-app/src/assets/stats.png?raw=true" width="700" />
+</p>
 
-Rule-based NLP for repeated complaint detection
+### Engineer Assignment View
+<p align="center">
+  <img src="./frontend-app/src/assets/assign.png?raw=true" width="700" />
+</p>
 
-Similarity check using cosine similarity
+---
 
-👥 Team
+## 12. Error Handling & Reliability
 
-Solo Developer — POWER-GRIFO Author
+- Global error middleware  
+- Request validation for body and file uploads  
+- Retry logic for database operations  
+- Redis-based rate limiting  
+- CORS enabled  
 
-Full-stack development
+---
 
-UI/UX
+## 13. AI / ML Integration
 
-Deployment
+-ChatBot for Admin
+-AI auto priority prediction
 
-Testing & documentation
 
-🚧 Future Improvements
 
-Email notifications for recurring faults
+---
 
-Admin analytics charts
+## 14. Team Members
 
-CSV/PDF export
 
-WebSocket real-time updates
+| Name | GitHub |
+|------|------|
+| Shreyashashwat|  https://github.com/Shreyashashwat |
+| Jhalak YAdav |  https://github.com/Jhalak3211 |
+| Ishita Singh|  https://github.com/ishu810 |
+| Kanak Mohan Jee|  https://github.com/kanakmohanj|
 
-Multi-admin management
+---
+
+## 15. Future Improvements
+
+- Email scheduling and reminders  
+- PDF/CSV report export  
+- Data analytics charts  
+- WebSocket based live updates  
+- Dedicated admin audit logs  
+
+---
+
+## 16. GitHub Checklist
+
+- `.env` added to `.gitignore`  
+- Screenshots included  
+- Deployment links updated  
+- Proper commit messages  
+- Folder structure cleaned  
+
+---
+
+## 17. Final Note
+
+This README presents a complete overview of POWER-GRIFO, demonstrating implemented functionalities, tech stack decisions, and reliability concerns while providing references for installation and demonstration.
