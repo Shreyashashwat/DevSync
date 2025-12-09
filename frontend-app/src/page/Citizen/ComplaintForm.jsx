@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { classifyComplaintAI } from "../../api/ai";
 
 const ComplaintForm = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    category: "Other",
-    priority: "Low",
     address: "",
     latitude: null,
     longitude: null,
@@ -14,7 +13,9 @@ const ComplaintForm = () => {
   });
 
   const [preview, setPreview] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
+  // ✅ GEOLOCATION
   useEffect(() => {
     if (!navigator.geolocation) {
       alert("Geolocation not supported");
@@ -37,7 +38,7 @@ const ComplaintForm = () => {
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     setFormData({ ...formData, photo: file });
-    setPreview(URL.createObjectURL(file));// creates a url for the image uploaded
+    setPreview(URL.createObjectURL(file));
   };
 
   const refreshLocation = () => {
@@ -51,6 +52,7 @@ const ComplaintForm = () => {
     );
   };
 
+  // ✅ SUBMIT WITH AI
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -59,34 +61,50 @@ const ComplaintForm = () => {
       return;
     }
 
-    const data = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (formData[key]) data.append(key, formData[key]);
-    });
+    if (!formData.description.trim()) {
+      alert("Description required");
+      return;
+    }
+
+    setSubmitting(true);
 
     try {
+      // ✅ AUTO AI CATEGORY & PRIORITY
+      const ai = await classifyComplaintAI(formData.description);
+
+      const data = new FormData();
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("category", ai.category);
+      data.append("priority", ai.priority);
+      data.append("address", formData.address || "");
+      data.append("latitude", formData.latitude);
+      data.append("longitude", formData.longitude);
+      if (formData.photo) data.append("photo", formData.photo);
+
       const token = localStorage.getItem("token");
-      const res = await axios.post(
+
+      await axios.post(
         "http://localhost:5000/api/complaints",
         data,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert(res.data.message || "Complaint Submitted!");
+      alert("✅ Complaint Submitted");
 
-      setFormData({
+      setFormData((prev) => ({
         title: "",
         description: "",
-        category: "Other",
-        priority: "Low",
         address: "",
-        latitude: formData.latitude,
-        longitude: formData.longitude,
+        latitude: prev.latitude,
+        longitude: prev.longitude,
         photo: null,
-      });
+      }));
       setPreview(null);
     } catch (err) {
-      alert("Error: " + (err.response?.data?.message || err.message));
+      alert("❌ Error submitting complaint");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -99,7 +117,7 @@ const ComplaintForm = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          {/* Title */}
+          {/* TITLE */}
           <div>
             <label className="text-green-900 font-medium">Title</label>
             <input
@@ -107,65 +125,27 @@ const ComplaintForm = () => {
               name="title"
               value={formData.title}
               onChange={handleChange}
-              placeholder="Complaint Title"
               required
-              className="w-full p-3 border border-green-700 rounded-lg 
-              text-black placeholder-gray-600
+              className="w-full p-3 border border-green-700 rounded-lg text-black
               focus:ring-2 focus:ring-green-500 outline-none"
             />
           </div>
 
-          {/* Description */}
+          {/* DESCRIPTION */}
           <div>
             <label className="text-green-900 font-medium">Description</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
-              rows="5"
               required
-              placeholder="Complaint Description"
-              className="w-full p-3 border border-green-700 rounded-lg 
-              text-black placeholder-gray-600
+              rows="5"
+              className="w-full p-3 border border-green-700 rounded-lg text-black
               focus:ring-2 focus:ring-green-500 outline-none"
             />
           </div>
 
-          {/* Category */}
-          <div>
-            <label className="text-green-900 font-medium">Category</label>
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="w-full p-3 border border-green-700 rounded-lg 
-              text-black bg-white focus:ring-2 focus:ring-green-500 outline-none"
-            >
-              <option>Infrastructure</option>
-              <option>Sanitation</option>
-              <option>Water</option>
-              <option>Electricity</option>
-              <option>Other</option>
-            </select>
-          </div>
-
-          {/* Priority */}
-          <div>
-            <label className="text-green-900 font-medium">Priority</label>
-            <select
-              name="priority"
-              value={formData.priority}
-              onChange={handleChange}
-              className="w-full p-3 border border-green-700 rounded-lg 
-              text-black bg-white"
-            >
-              <option>Low</option>
-              <option>Medium</option>
-              <option>High</option>
-            </select>
-          </div>
-
-          {/* Address */}
+          {/* ADDRESS */}
           <div>
             <label className="text-green-900 font-medium">Address (optional)</label>
             <input
@@ -173,54 +153,42 @@ const ComplaintForm = () => {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              placeholder="Your Address"
-              className="w-full p-3 border border-green-700 rounded-lg 
-              text-black placeholder-gray-600"
+              className="w-full p-3 border border-green-700 rounded-lg text-black"
             />
           </div>
 
-          {/* Photo */}
+          {/* PHOTO */}
           <div>
             <label className="text-green-900 font-medium">Photo (optional)</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoChange}
-              className="mt-1"
-            />
+            <input type="file" accept="image/*" onChange={handlePhotoChange} />
             {preview && (
-              <img
-                src={preview}
-                alt="Preview"
-                className="w-full mt-2 rounded-lg shadow"
-              />
+              <img src={preview} alt="Preview" className="w-full mt-2 rounded-lg" />
             )}
           </div>
 
-          {/* Location */}
+          {/* LOCATION */}
           {formData.latitude && (
-            <p className="text-green-900">
+            <p className="text-green-900 text-sm">
               Location: {formData.latitude.toFixed(5)}, {formData.longitude.toFixed(5)}
             </p>
           )}
 
-          {/* Refresh Button */}
           <button
             type="button"
             onClick={refreshLocation}
-            className="w-full bg-green-300 text-green-900 py-2 rounded-lg 
-            font-semibold hover:bg-green-400 transition"
+            className="w-full bg-green-300 text-green-900 py-2 rounded-lg
+            font-semibold hover:bg-green-400"
           >
             Confirm / Update Location
           </button>
 
-          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-green-800 text-white py-3 rounded-lg 
-            font-bold hover:bg-green-600 transition"
+            disabled={submitting}
+            className="w-full bg-green-800 text-white py-3 rounded-lg
+            font-bold hover:bg-green-600 disabled:opacity-60"
           >
-            Submit Complaint
+            {submitting ? "Submitting..." : "Submit Complaint"}
           </button>
 
         </form>

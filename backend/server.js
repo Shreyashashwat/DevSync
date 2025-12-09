@@ -34,6 +34,9 @@ app.use(cors({
 app.get('/', (req, res) => {
   res.send('Server is working');
 });
+import aiRoutes from "./src/routes/aiRoutes.js";
+app.use("/api/ai", aiRoutes);
+
 
 // Mount routes ONLY ONCE
 app.use('/api/auth', authRoutes);
@@ -42,7 +45,8 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use('/api/users', userRoutes);
 app.post("/api/v1/save-token",protect,saveFcmToken)
 // app.post("/api/complaint/",async(req,res)=>{
-app.use("/api/chat",chatRouts)    
+app.use("/api/chat",chatRouts)   
+
 // })
 app.post('/api/users/:id/rate', protect, async (req, res) => {
   const staffId = req.params.id;

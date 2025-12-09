@@ -33,10 +33,10 @@ def upsert_vector(doc: dict):
     vector = model.encode(text).tolist()
 
     point = PointStruct(
-        id=mongo_id,  # ✅ use Mongo ID (NOT random UUID)
+        id=str(uuid.uuid4()),  # ✅ use Mongo ID (NOT random UUID)
         vector=vector,
         payload={
-            "doc_id": mongo_id,
+            "doc_id": str(mongo_id),
 
             # ✅ MULTI-TENANCY (CRITICAL)
             "tenant_id": str(doc.get("tenant_id")),
