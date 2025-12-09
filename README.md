@@ -171,11 +171,6 @@ npm run dev
   <img src="./frontend-app/src/assets/login.png?raw=true" width="450" />
 </p>
 
-### Complaint Submission Form
-<p align="center">
-  <img src="./frontend-app/src/assets/login.png?raw=true" width="450" />
-</p>
-
 ### Admin Dashboard with Stats
 <p align="center">
   <img src="./frontend-app/src/assets/admin.png?raw=true" width="700" />
