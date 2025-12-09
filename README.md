@@ -207,8 +207,8 @@ npm run dev
 
 | Name | GitHub |
 |------|------|
-| Shreyashashwat|  https://github.com/Shreyashashwat |
-| Jhalak YAdav |  https://github.com/Jhalak3211 |
+| Shreya shashwat|  https://github.com/Shreyashashwat |
+| Jhalak Yadav |  https://github.com/Jhalak3211 |
 | Ishita Singh|  https://github.com/ishu810 |
 | Kanak Mohan Jee|  https://github.com/kanakmohanj|
 
