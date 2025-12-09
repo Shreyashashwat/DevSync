@@ -321,10 +321,24 @@ useEffect(() => {
           const timeLeft = timeLefts[c._id];
 
           return (
-            <div
-              key={c._id}
-              className="bg-[#00160D]/70 border border-[#39FF14]/30 rounded-xl p-5"
-            >
+           <div
+  key={c._id}
+  className="
+    bg-white/5
+    backdrop-blur-lg
+    border border-white/15
+    rounded-xl p-5
+
+    shadow-sm
+    transition-all duration-300 ease-out
+
+    hover:backdrop-blur-xl
+    hover:bg-white/8
+    hover:-translate-y-1
+  "
+>
+
+
               <div className="flex items-center gap-3 mb-2">
               <input
                 type="checkbox"

@@ -16,7 +16,7 @@ function BulkUserUpload() {
       const res = await axiosInstance.post("/api/users/bulk-upload", form);
 
       alert(
-        `✅ Uploaded!
+        ` Uploaded!
 Created: ${res.data.createdCount}
 Skipped: ${res.data.skippedCount}`
       );

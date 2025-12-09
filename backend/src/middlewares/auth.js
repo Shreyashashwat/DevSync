@@ -3,12 +3,16 @@ import User from "../models/User.js";
 
 
 export const protect = (req, res, next) => {
-  const token = req.headers['x-auth-token'] || req.headers.authorization?.split(' ')[1];
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.startsWith('Bearer ') 
+    ? authHeader.split(' ')[1] 
+    : req.headers['x-auth-token'];
+    
   if (!token) return res.status(401).json({ msg: 'No token, authorization denied' });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.user; // must match JWT payload
+    req.user = decoded.user;
     next();
   } catch (err) {
     res.status(401).json({ msg: 'Token is not valid' });
@@ -17,7 +21,6 @@ export const protect = (req, res, next) => {
 
 
 
-// Role-based access middleware
 export const authorizeRoles = (...allowedRoles) => {
   return (req, res, next) => {
     if (!req.user) return res.status(401).json({ msg: 'Not authenticated' });

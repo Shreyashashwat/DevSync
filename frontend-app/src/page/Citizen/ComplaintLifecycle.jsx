@@ -44,11 +44,45 @@ export default function ComplaintLifecycle() {
       const data = Array.isArray(res.data) ? res.data : [];
       setComplaints(data);
 
+      // SLA timer
+      const initialTimes = {};
       // SLA timers
       const timers = {};
       data.forEach((c) => {
         timers[c._id] = calculateTimeLeft(c.deadline);
       });
+
+
+
+      setTimeLefts(initialTimes);
+
+      const backendRatings = {};
+      data.forEach((c) => {
+        const myRatingObj = c.assigned_to?.ratings?.find(
+          (r) => r.rater === localStorage.getItem("userId")
+        );
+        if (myRatingObj) {
+          backendRatings[c._id] = myRatingObj.rating;
+        }
+      });
+
+      const stored = (() => {
+        try {
+          return JSON.parse(localStorage.getItem("complaintRatings") || "{}");
+        } catch {
+          return {};
+        }
+      })();
+
+      const merged = { ...stored, ...backendRatings };
+      setRatings(merged);
+      try {
+        localStorage.setItem("complaintRatings", JSON.stringify(merged));
+      } catch {  }
+
+
+
+      
       setTimeLefts(timers);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch complaints");
@@ -111,19 +145,76 @@ export default function ComplaintLifecycle() {
 
   /* ---------------- RATINGS ---------------- */
 
-  const submitRating = async (complaintId, rating) => {
+  // const submitRating = async (complaintId, rating) => {
+  //   const token = localStorage.getItem("token");
+  //   const complaint = complaints.find((c) => c._id === complaintId);
+
+  //   if (!token || !complaint?.assigned_to?._id) return;
+
+  //   try {
+  //     await axios.post(
+  //       `http://localhost:5000/api/users/${staffId}/rate`,
+  //       { rating: ratingToSubmit },
+  //       { headers: { "x-auth-token": token } }
+  //     );
+  //     alert("Rating submitted successfully!");
+  //     await fetchComplaints(); 
+  //   } catch (err) {
+  //     console.error("Error submitting rating:", err);
+  //     alert(err.response?.data?.message || "Failed to submit rating");
+  //   }
+  //   // await axios.post(
+  //   //   `http://localhost:5000/api/users/${complaint.assigned_to._id}/rate`,
+  //   //   { rating },
+  //   //   { headers: { "x-auth-token": token } }
+  //   // );
+
+  //   setRatings((prev) => ({ ...prev, [complaintId]: rating }));
+  // };
+
+  const handleRatingChange = (complaintId, newRating) => {
+    setRatings((prev) => {
+      const updated = { ...prev, [complaintId]: newRating };
+      try {
+        localStorage.setItem("complaintRatings", JSON.stringify(updated));
+      } catch { }
+      return updated;
+    });
+  };
+
+  const submitRating = async (complaintId, ratingValue) => {
     const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to rate");
+      return;
+    }
+
+    const ratingToSubmit = ratingValue ?? ratings[complaintId];
+    if (!ratingToSubmit) {
+      alert("Please select a rating first");
+      return;
+    }
+
     const complaint = complaints.find((c) => c._id === complaintId);
+    if (!complaint || !complaint.assigned_to?._id) {
+      alert("No staff assigned to this complaint");
+      return;
+    }
 
-    if (!token || !complaint?.assigned_to?._id) return;
+    const staffId = complaint.assigned_to._id;
 
-    await axios.post(
-      `http://localhost:5000/api/users/${complaint.assigned_to._id}/rate`,
-      { rating },
-      { headers: { "x-auth-token": token } }
-    );
-
-    setRatings((prev) => ({ ...prev, [complaintId]: rating }));
+    try {
+      await axios.post(
+        `http://localhost:5000/api/users/${staffId}/rate`,
+        { rating: ratingToSubmit },
+        { headers: { "x-auth-token": token } }
+      );
+      // alert("Rating submitted successfully!");
+      await fetchComplaints(); 
+    } catch (err) {
+      console.error("Error submitting rating:", err);
+      // alert(err.response?.data?.message || "Failed to submit rating");
+    }
   };
 
   /* ---------------- LOADING / ERROR ---------------- */
@@ -148,7 +239,17 @@ export default function ComplaintLifecycle() {
           const timeLeft = timeLefts[c._id];
 
           return (
-            <div key={c._id} className="bg-white/10 p-6 rounded-xl">
+            <div
+  key={c._id}
+  className="
+    bg-white/10 p-6 rounded-xl
+    transition-all duration-300 ease-out
+    hover:scale-[1.03]
+    hover:shadow-[0_0_25px_#00ff8c55]
+    hover:border hover:border-[#00ff8c]/40
+  "
+>
+
               <h3 className="text-xl font-bold">{c.title}</h3>
               <p>{c.description}</p>
 
@@ -163,16 +264,53 @@ export default function ComplaintLifecycle() {
               )}
 
               {c.status === "OPEN" && (
-                <div className="flex gap-2 mt-3">
-                  <button onClick={() => setEditComplaint(c)}>Edit</button>
-                  <button onClick={() => handleDelete(c._id)}>Delete</button>
-                </div>
+                <div className="flex gap-3 mt-4">
+  <button
+    onClick={() => setEditComplaint(c)}
+    className="
+      px-4 py-1.5 rounded-md text-sm font-semibold
+      text-[#B4FF5A]
+      border border-[#00ff8c]/40
+      bg-black/30
+      transition-all duration-200
+      hover:bg-[#1b543a]
+      hover:text-black
+      hover:shadow-[0_0_12px_#00ff8c]
+      hover:scale-105 mb-2
+    "
+  >
+    Edit
+  </button>
+
+  <button
+    onClick={() => handleDelete(c._id)}
+    className="
+      px-4 py-1.5 rounded-md text-sm font-semibold
+      text-red-400
+      border border-red-400/40
+      bg-black/30
+      transition-all duration-200
+      hover:bg-red-300
+      hover:text-black
+      hover:shadow-[0_0_12px_#ff4d4d]
+      hover:scale-105 mb-2
+    "
+  >
+    Delete
+  </button>
+</div>
+
               )}
 
               <Rating
                 style={{ maxWidth: 120 }}
                 value={ratings[c._id] || 0}
-                onChange={(r) => submitRating(c._id, r)}
+                onChange={
+                  (r) => {submitRating(c._id, r);
+                    handleRatingChange(c._id,r)
+                  }
+
+                }
               />
             </div>
           );
@@ -180,39 +318,139 @@ export default function ComplaintLifecycle() {
       </div>
 
       {/* EDIT MODAL */}
-      {editComplaint && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center">
-          <div className="bg-[#00160D] p-6 rounded-xl w-[450px]">
-            <input
-              value={editComplaint.title}
-              onChange={(e) =>
-                setEditComplaint({ ...editComplaint, title: e.target.value })
-              }
-            />
+     {editComplaint && (
+  <div className="fixed inset-0 z-50 bg-black/70 flex  justify-center">
+    <div
+      className="
+        bg-[#00160D]
+        border border-[#00ff8c]/30
+        p-6 rounded-xl
+        w-[450px]
+        max-h-[85vh]
+        overflow-y-auto
+        shadow-[0_0_30px_#00ff8c33]
+      "
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h2 className="text-[#00ff8c] text-xl font-semibold mb-4">
+        Edit Complaint
+      </h2>
 
-            <textarea
-              value={editComplaint.description}
-              onChange={(e) =>
-                setEditComplaint({ ...editComplaint, description: e.target.value })
-              }
-            />
+      <input
+        className="
+          w-full mb-3 p-2 rounded
+          bg-black/40 text-[#B4FF5A]
+          border border-[#00ff8c]/30
+          focus:outline-none focus:ring-1 focus:ring-[#00ff8c]
+        "
+        value={editComplaint.title}
+        onChange={(e) =>
+          setEditComplaint({ ...editComplaint, title: e.target.value })
+        }
+      />
 
-            <input
-              type="file"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                setEditImageFile(file);
-                setEditImagePreview(URL.createObjectURL(file));
-              }}
-            />
+      <textarea
+        rows="4"
+        className="
+          w-full mb-3 p-2 rounded
+          bg-black/40 text-[#B4FF5A]
+          border border-[#00ff8c]/30
+          focus:outline-none focus:ring-1 focus:ring-[#00ff8c]
+        "
+        value={editComplaint.description}
+        onChange={(e) =>
+          setEditComplaint({
+            ...editComplaint,
+            description: e.target.value,
+          })
+        }
+      />
 
-            <div className="flex justify-end gap-3">
-              <button onClick={() => setEditComplaint(null)}>Cancel</button>
-              <button onClick={saveEdit}>Save</button>
-            </div>
-          </div>
-        </div>
+      <select
+        className="
+          w-full mb-3 p-2 rounded
+          bg-black/40 text-[#B4FF5A]
+          border border-[#00ff8c]/30
+        "
+        value={editComplaint.category}
+        onChange={(e) =>
+          setEditComplaint({
+            ...editComplaint,
+            category: e.target.value,
+          })
+        }
+      >
+        <option>Other</option>
+        <option>Water</option>
+        <option>Electricity</option>
+        <option>Road</option>
+      </select>
+
+      <select
+        className="
+          w-full mb-3 p-2 rounded
+          bg-black/40 text-[#B4FF5A]
+          border border-[#00ff8c]/30
+        "
+        value={editComplaint.priority}
+        onChange={(e) =>
+          setEditComplaint({
+            ...editComplaint,
+            priority: e.target.value,
+          })
+        }
+      >
+        <option>Low</option>
+        <option>Medium</option>
+        <option>High</option>
+      </select>
+
+      <input
+        type="file"
+        className="mb-3 text-[#B4FF5A]"
+        onChange={(e) => {
+          const file = e.target.files[0];
+          setEditImageFile(file);
+          setEditImagePreview(URL.createObjectURL(file));
+        }}
+      />
+
+      {editImagePreview && (
+        <img
+          src={editImagePreview}
+          className="w-full h-40 object-cover rounded mb-3 border border-[#00ff8c]/30"
+        />
       )}
+
+      <div className="flex justify-end gap-3 mt-4">
+        <button
+          className="
+            px-4 py-2 rounded
+            bg-[#002b1c]
+            text-[#B4FF5A]
+            border border-[#00ff8c]/30
+          "
+          onClick={() => setEditComplaint(null)}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="
+            px-4 py-2 rounded
+            bg-[#00ff8c]
+            text-black font-semibold
+          "
+          onClick={saveEdit}
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
     </>
   );
 }

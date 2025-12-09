@@ -17,9 +17,12 @@ import ComplaintForm from "./page/Citizen/ComplaintForm.jsx";
 import AdminDashboard from "./page/Admin/AdminDashboard.jsx";
 import StaffDashboard from "./page/Staff/StaffDashboard.jsx";
 import CitizenDashboard from "./page/Citizen/CitizenDashboard.jsx";
+// import StaffPerformance from "./page/Admin/StaffPerformance.jsx";
 import ProtectedRoute from "./routes/protectedRoute.jsx";
 
-// Firebase
+
+//Notification
+// import Messaging from "./Firebase/Messaging.jsx";
 import { onMessage } from "firebase/messaging";
 import { messaging } from "./Firebase/firebase";
 
@@ -68,10 +71,7 @@ const COLORS = {
   white: "#FFFFFF",
 };
 
-/* ===============================
-   🔐 Auth Buttons
-================================ */
-function AuthButtons() {
+export function AuthButtons() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -97,9 +97,6 @@ function AuthButtons() {
   );
 }
 
-/* ===============================
-   🧭 Navbar
-================================ */
 function Navbar() {
   return (
     <nav
@@ -117,15 +114,32 @@ function Navbar() {
         zIndex: 999,
       }}
     >
-      <img src={logo} alt="Logo" style={{ height: 50, marginRight: 20 }} />
-      <AuthButtons />
+
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      >
+        <img
+          src={logo}
+          alt="Logo"
+          style={{
+            height: "70px",
+            width:"800px",
+            objectFit: "contain",
+            filter: "drop-shadow(0 0 4px rgba(255,255,255,0.6))",
+          }}
+        />
+      </div>
+      <AuthButtons/>
+
+   
     </nav>
   );
 }
 
-/* ===============================
-   🚀 MAIN APP
-================================ */
 export default function App() {
 
   // ✅ SERVICE WORKER REGISTRATION (ONCE)
@@ -162,23 +176,31 @@ export default function App() {
             }
           />
 
-          <Route
-            path="/dashboard/staff"
-            element={
-              <ProtectedRoute allowedRoles={["staff", "officer"]}>
-                <StaffDashboard />
-              </ProtectedRoute>
-            }
-          />
+        <Route
+          path="/dashboard/admin"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/staff"
+          element={
+            <ProtectedRoute allowedRoles={["staff", "officer"]}>
+              <StaffDashboard />
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/dashboard/admin/staff-performance"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+            </ProtectedRoute>
+          }
+        />
 
-          <Route
-            path="/dashboard/admin"
-            element={
-              <ProtectedRoute allowedRoles={["admin"]}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
+          
 
           <Route
             path="/complaint/new"
