@@ -53,7 +53,7 @@ POWER-GRIFO centralizes this entire workflow into one application.
 - MongoDB database  
 - Redis cache and rate limiting  
 
-### 3.4 Brownie Points / Additional Enhancements
+### 3.4 Brownie Points 
 
 - Docker support  
 - Worker queue logic for heavy operations  
@@ -99,8 +99,7 @@ Node.js, Express.js, JWT Authentication
 **Database & Cloud**  
 MongoDB Atlas, Cloudinary, Redis
 
-**Deployment**  
-Vercel/Netlify (frontend), Render/Railway (backend)
+
 
 ---
 
@@ -114,9 +113,6 @@ Backend (Express + JWT)
 |
 | | |
 MongoDB Redis Cloudinary
-
-yaml
-Copy code
 
 ---
 
@@ -151,36 +147,19 @@ CLOUDINARY_API_KEY=value
 CLOUDINARY_API_SECRET=value
 REDIS_URL=value
 
-powershell
-Copy code
+
 
 Start backend:
 
 npm run dev
-
-shell
-Copy code
 
 ### Frontend
 
 cd frontend-app
 npm install
 npm run dev
-
-yaml
-Copy code
-
 ---
 
-## 10. Deployment Links
-
-(Add before evaluation)
-
-Frontend:  
-Backend API:  
-GitHub Repository:  
-
----
 
 ## 11. Screenshots
 
@@ -216,9 +195,7 @@ GitHub Repository:
 
 ## 12. Error Handling & Reliability
 
-- Global error middleware  
 - Request validation for body and file uploads  
-- Retry logic for database operations  
 - Redis-based rate limiting  
 - CORS enabled  
 
