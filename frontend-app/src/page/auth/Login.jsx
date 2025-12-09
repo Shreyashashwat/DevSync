@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import { syncFcmToken } from "../../Firebase/syncFcmToken";
 
 export default function Login() {
   const [formData, setFormData] = useState({ identifier: "", password: "" });
@@ -22,7 +23,11 @@ export default function Login() {
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-
+        try {
+    await syncFcmToken();
+  } catch (e) {
+    console.warn("FCM token sync failed:", e);
+  }
         const role = res.data.user.role;
         if (role === "admin") navigate("/dashboard/admin");
         else if (role === "staff") navigate("/dashboard/staff");

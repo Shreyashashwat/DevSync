@@ -6,7 +6,7 @@ import os
 
 load_dotenv()
 
-MONGODB_URL      = os.getenv("MONGODB_URL")
+MONGODB_URL      = os.getenv("MONGO_URI")
 QDRANT_URL       = os.getenv("QDRANT_URL")
 QDRANT_API_KEY   = os.getenv("QDRANT_API_KEY")
 EMBEDDING_MODEL  = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")

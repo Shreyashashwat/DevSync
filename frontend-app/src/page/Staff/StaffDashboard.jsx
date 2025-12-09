@@ -13,35 +13,66 @@ export default function StaffDashboard() {
   const [timeLefts, setTimeLefts] = useState({});
   const [userna, setUserna] = useState("");
   const [ratearr, setRatearr] = useState()
+  const [selectedComplaints, setSelectedComplaints] = useState([]);
+const [bulkStatus, setBulkStatus] = useState("");
+const toggleComplaint = (id) => {
+  setSelectedComplaints((prev) =>
+    prev.includes(id)
+      ? prev.filter((x) => x !== id)
+      : [...prev, id]
+  );
+};
+
+const toggleAll = () => {
+  if (selectedComplaints.length === filteredComplaints.length) {
+    setSelectedComplaints([]);
+  } else {
+    setSelectedComplaints(filteredComplaints.map((c) => c._id));
+  }
+};
+
   useEffect(() => {
-    const fetchComplaints = async () => {
-      try {
-        const res = await axiosInstance.get("/api/complaints");
-        console.log("engineer name", res.data[0].assigned_to.username)
-        var namee = res.data[0].assigned_to;
-        console.log(res)
-        console.log("const", namee)
-        // console.log("ratings", res.)
-        // console.log(res.data)
-        setUserna(res.data[0].assigned_to.username);
-        setRatearr(res.data[0].assigned_to.ratings)
-        console.log("uset name", userna)
-        setComplaints(res.data);
+   const fetchComplaints = async () => {
+  try {
+    const res = await axiosInstance.get("/api/complaints");
 
-        const statsRes = await axiosInstance.get("/api/users/stats");
-        setStats(statsRes.data);
-        const initialTimes = {};
-        res.data.forEach((c) => {
-          initialTimes[c._id] = calculateTimeLeft(c.deadline);
-        });
-        setTimeLefts(initialTimes);
+    const complaintsData = Array.isArray(res.data) ? res.data : [];
+    setComplaints(complaintsData);
 
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching complaints:", err);
-        alert("Failed to fetch complaints. Please login again.");
+    // ✅ NEW STAFF SAFE
+    if (complaintsData.length === 0) {
+      setUserna("Engineer");
+      setRatearr([]);
+    } else {
+      const assigned = complaintsData.find(
+        c => c?.assigned_to?.username
+      );
+
+      if (assigned) {
+        setUserna(assigned.assigned_to.username);
+        setRatearr(assigned.assigned_to.ratings || []);
+      } else {
+        setUserna("Engineer");
+        setRatearr([]);
       }
-    };
+    }
+
+    const statsRes = await axiosInstance.get("/api/users/stats");
+    setStats(statsRes.data);
+
+    const initialTimes = {};
+    complaintsData.forEach(c => {
+      initialTimes[c._id] = calculateTimeLeft(c.deadline);
+    });
+    setTimeLefts(initialTimes);
+
+    setLoading(false);
+  } catch (err) {
+    console.error("Error fetching complaints:", err);
+    alert("Failed to fetch complaints");
+  }
+};
+
 
     fetchComplaints();
 
@@ -74,7 +105,7 @@ export default function StaffDashboard() {
           c._id === complaintId ? { ...c, status: newStatus } : c
         )
       ); 
-      await fetchComplaints();
+    
 
       setUpdating(null);
     } catch (err) {
@@ -83,6 +114,32 @@ export default function StaffDashboard() {
       setUpdating(null);
     }
   };
+  const handleBulkStatusUpdate = async () => {
+  if (!bulkStatus || selectedComplaints.length === 0) return;
+
+  try {
+    await axiosInstance.patch("/api/complaints/staff/bulk-update", {
+      complaintIds: selectedComplaints,
+      status: bulkStatus,
+    });
+
+    // Update UI instantly
+    setComplaints((prev) =>
+      prev.map((c) =>
+        selectedComplaints.includes(c._id)
+          ? { ...c, status: bulkStatus }
+          : c
+      )
+    );
+
+    setSelectedComplaints([]);
+    setBulkStatus("");
+  } catch (err) {
+    console.error(err);
+    alert("Bulk update failed");
+  }
+};
+
 
   const filteredComplaints = complaints
     .filter(
@@ -225,6 +282,35 @@ useEffect(() => {
           <option value="priority">Priority</option>
         </select>
       </div>
+      {selectedComplaints.length > 0 && (
+  <div className="flex items-center gap-4 mb-4 p-4 rounded-xl bg-[#003A20]/40 border border-[#39FF14]/40">
+    <span className="text-[#7AFF57] font-semibold">
+      {selectedComplaints.length} selected
+    </span>
+
+    <select
+      value={bulkStatus}
+      onChange={(e) => setBulkStatus(e.target.value)}
+      className="px-4 py-2 rounded-lg bg-[#39FF14]/30 text-white border"
+    >
+      <option value="">Select Status</option>
+      {["IN_PROGRESS", "RESOLVED", "CLOSED"].map((s) => (
+        <option key={s} className="bg-black text-white">
+          {s}
+        </option>
+      ))}
+    </select>
+
+    <button
+      onClick={handleBulkStatusUpdate}
+      disabled={!bulkStatus}
+      className="px-5 py-2 bg-[#7AFF57] text-black font-bold rounded-lg hover:bg-[#60ff3e] transition"
+    >
+      Update Selected
+    </button>
+  </div>
+)}
+
 
       <div className="flex flex-col gap-5">
         {filteredComplaints.length === 0 && (
@@ -239,9 +325,18 @@ useEffect(() => {
               key={c._id}
               className="bg-[#00160D]/70 border border-[#39FF14]/30 rounded-xl p-5"
             >
+              <div className="flex items-center gap-3 mb-2">
+              <input
+                type="checkbox"
+                checked={selectedComplaints.includes(c._id)}
+                onChange={() => toggleComplaint(c._id)}
+                className="accent-[#7AFF57] scale-125"
+              />
+
               <h3 className="text-xl font-semibold text-[#7AFF57]">
                 {c.title} <span className="text-[#39FF14]">({c.status})</span>
               </h3>
+            </div>
 
               <p className="mt-1 text-[#D9FFE8]">{c.description}</p>
 

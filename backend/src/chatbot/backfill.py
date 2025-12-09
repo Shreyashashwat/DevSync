@@ -29,7 +29,7 @@ for doc in docs.find():
         vector=vector,
         payload={
             "doc_id": str(mongo_id),   
-            
+            "tenant_id": str(doc.get("tenant_id")),
             "filename": doc.get("title", "Untitled Complaint"),
             
             "user": str(doc.get("submitted_by", "unknown")),

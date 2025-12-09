@@ -43,13 +43,29 @@ async function sendEmail(to, subject, text, html) {
 
 
 async function sendNotification(token, title, body) {
-  const message = { notification: { title, body }, token };
- 
+
+  if (!token) {
+    console.warn("No FCM token provided");
+    return;
+  }
+
+  const message = { 
+    notification: { title, body }, 
+    token 
+  };
+  console.log("hi")
   try {
-    await admin.messaging().send(message);
-    console.log(`Notification sent to token: ${token}`);
+    const response = await admin.messaging().send(message);
+    console.log("✅ Notification sent successfully:", response);
   } catch (err) {
-    console.error("Error sending notification:", err);
+    console.error("❌ Error sending notification:", err);
+    
+    // Only clear invalid tokens
+    if (err.code === "messaging/registration-token-not-registered" ||
+        err.code === "messaging/invalid-registration-token") {
+      console.log("Clearing invalid FCM token");
+      // You'd need to pass userId to clear the token properly
+    }
   }
 }
 

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import StatCard from "../../components/StatCard";
 import CreateUserForm from "../../components/CreateUserForm";
 import BulkUserUpload from "../../components/BulkUserUpload";
+import AdminChatbotWidget from "../../components/AdminChatbotWidget";
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
@@ -348,10 +349,13 @@ console.log('yes')
       )}
      
       </main>
+      <AdminChatbotWidget />
     </div>
-  );
+    
+  
+);
 };
-
+ 
 export default AdminDashboard;
 
 // for SLA timer

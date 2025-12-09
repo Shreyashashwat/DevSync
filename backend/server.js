@@ -12,10 +12,10 @@ import authRoutes from './src/routes/authRouts.js';
 import complaintRoutes from './src/routes/complaintRoutes.js';
 import dashboardRoutes from "./src/routes/dashboardRoutes.js";
 import userRoutes from './src/routes/userRoutes.js';
-import {saveNotificationToken} from "./src/firebase/FirebaseAdmin.js"
+import { saveFcmToken } from './src/controllers/userController.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-
+import chatRouts from './src/routes/chatRouts.js'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -40,9 +40,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/complaints', complaintRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use('/api/users', userRoutes);
-app.post("/api/v1/save-token",saveNotificationToken)
+app.post("/api/v1/save-token",protect,saveFcmToken)
 // app.post("/api/complaint/",async(req,res)=>{
-    
+app.use("/api/chat",chatRouts)    
 // })
 app.post('/api/users/:id/rate', protect, async (req, res) => {
   const staffId = req.params.id;

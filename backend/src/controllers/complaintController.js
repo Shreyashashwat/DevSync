@@ -126,36 +126,27 @@ export const getComplaints = async (req, res) => {
 };
 
 export const assignComplaint = async (req, res) => {
-    console.log("Hi");
-
+  console.log("*******************hi")
   try {
-    const { complaintId, staffId } = req.body; // Moved to the beginning of the try block
-
+    const { complaintId, staffId } = req.body;
+    console.log("comID",complaintId);
+    console.log("staffID",staffId);
     if (req.user.role !== "admin") {
-      return res.status(403).json({
-        success: false,
-        message: "Access denied",
-      });
+      return res.status(403).json({ message: "Access denied" });
     }
 
-    const staffUserForCheck = await User.findOne({ // Renamed to avoid redeclaration
+    const staff = await User.findOne({
       _id: staffId,
       role: "staff",
       tenantId: req.user.tenantId,
     });
 
-    if (!staffUserForCheck) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid staff for this tenant",
-      });
+    if (!staff) {
+      return res.status(400).json({ message: "Invalid staff" });
     }
 
     const complaint = await Complaint.findOneAndUpdate(
-      {
-        _id: complaintId,
-        tenantId: req.user.tenantId,
-      },
+      { _id: complaintId, tenantId: req.user.tenantId },
       {
         assigned_to: staffId,
         status: "ASSIGNED",
@@ -163,45 +154,34 @@ export const assignComplaint = async (req, res) => {
       },
       { new: true }
     )
-      .populate('assigned_to', 'username email fcmToken')
-       // populate Token
-      .populate('submitted_by', 'username email');
+      .populate("assigned_to", "username email fcmToken")
+      .populate("submitted_by", "username email");
+    console.log(complaint);
+    if (!complaint) {
+      return res.status(404).json({ message: "Complaint not found" });
+    }
 
-    if (!complaint) return res.status(404).json({ success: false, message: 'Complaint not found' });
+    const title = `New Complaint Assigned`;
+    const body = `Complaint "${complaint.title}" has been assigned to you.`;
 
-    // Send immediate notification to assigned staff
-    if (complaint.assigned_to) {
-      // Use complaint.assigned_to directly, which is already populated
-      const title = `New Complaint Assigned: ${complaint.title}`;
-      const body = `Complaint #${complaint._id} has been assigned to you. Type: ${complaint.category}. Location: ${complaint.location?.address || 'N/A'}. Deadline: ${complaint.deadline ? new Date(complaint.deadline).toLocaleString() : 'N/A'}`;
+    // 🔔 Push notification
 
-      if (complaint.assigned_to.fcmToken) {
-        console.log("in background messaging");
-        console.log("Private key starts with:", process.env.FIREBASE_PRIVATE_KEY.slice(0, 40));
-        console.log("Private key ends with:", process.env.FIREBASE_PRIVATE_KEY.slice(-40));
+    console.log(complaint.assigned_to.fcmToken +"fcm");
+    if (complaint.assigned_to?.fcmToken) {
+      await sendNotification(
+        complaint.assigned_to.fcmToken,
+        title,
+        body
+      );
+    }
 
-        await sendNotification(complaint.assigned_to.fcmToken, title, body);
-        console.log("background messaging done");
-      }
-      if (complaint.assigned_to.email) {
-        const html = `
-          <div style="font-family: Arial, sans-serif; padding: 15px;">
-            <h2> New Complaint Assigned!</h2>
-            <p>Hi ${complaint.assigned_to.username || "there"},</p>
-            <p>A new complaint has been assigned to you:</p>
-            <h3>${complaint.title}</h3>
-            <p><strong>Description:</strong> ${complaint.description}</p>
-            <p><strong>Category:</strong> ${complaint.category}</p>
-            <p><strong>Location:</strong> ${complaint.location?.address || 'N/A'}</p>
-            <p><strong>Priority:</strong> ${complaint.priority}</p>
-            <p><strong>Deadline:</strong> ${complaint.deadline ? new Date(complaint.deadline).toLocaleString() : 'N/A'}</p>
-            <br/>
-            <p>Please review and take action.<br/>– DevSync Team</p>
-          </div>
-        `;
-        await sendEmail(complaint.assigned_to.email, title, body, html);
-        console.log("email sent");
-      }
+    // 📧 Email notification
+    if (complaint.assigned_to?.email) {
+      await sendEmail(
+        complaint.assigned_to.email,
+        title,
+        body
+      );
     }
 
     res.status(200).json({
@@ -209,14 +189,13 @@ export const assignComplaint = async (req, res) => {
       message: "Complaint assigned successfully",
       complaint,
     });
+
   } catch (error) {
-    console.error("Error assigning complaint:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error assigning complaint",
-    });
+    console.error("Assign complaint error:", error);
+    res.status(500).json({ message: err });
   }
 };
+
 
 export const updateComplaintStatus = async (req, res) => {
   try {
@@ -403,7 +382,7 @@ export const staffBulkUpdateComplaints = async(req,res)=>{
     }
     const result=await Complaint.updateMany({
       _id:{$in:complaintIds},
-      assigned_to:req.user._id,
+      assigned_to:req.user.id,
       tenantId:req.user.tenantId,
 
     },

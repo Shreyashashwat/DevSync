@@ -24,39 +24,48 @@ def get_searchable_text(doc: dict) -> str:
     return " ".join(part for part in parts if part and not part.endswith(": ")).strip()
 
 def upsert_vector(doc: dict):
-    mongo_id = doc["_id"]
-    point_id = str(uuid.uuid4())          
+    mongo_id = str(doc["_id"])   # ✅ stable ID
 
-    text = get_searchable_text(doc)       
-    if not text:
+    text = get_searchable_text(doc)
+    if not text.strip():
         return
 
     vector = model.encode(text).tolist()
 
     point = PointStruct(
-        id=point_id,
+        id=mongo_id,  # ✅ use Mongo ID (NOT random UUID)
         vector=vector,
         payload={
-            "doc_id": str(mongo_id),
-            
-            "filename": doc.get("title", "Untitled Complaint"),
-            
-            "user": str(doc.get("submitted_by", "unknown")),
-            
-            #Store extra metadata 
+            "doc_id": mongo_id,
+
+            # ✅ MULTI-TENANCY (CRITICAL)
+            "tenant_id": str(doc.get("tenant_id")),
+
+            # ✅ OWNERSHIP
+            "submitted_by": str(doc.get("submitted_by", "")),
+            "assigned_to": str(doc.get("assigned_to", "")),
+
+            # ✅ SEARCH METADATA
             "category": doc.get("category", "General"),
             "priority": doc.get("priority", "Low"),
             "status": doc.get("status", "Open"),
-            "assigned_to": str(doc.get("assigned_to", ""))
+            "title": doc.get("title", "Untitled Complaint"),
         }
     )
 
-    qdrant.upsert(collection_name=COLLECTION_NAME, points=[point])
-    logger.info(f"Synced → {mongo_id} | {doc.get('title', 'Untitled')}")
+    qdrant.upsert(
+        collection_name=COLLECTION_NAME,
+        points=[point]
+    )
+
+    logger.info(f"✅ Vector synced | {mongo_id} | {doc.get('title')}")
 
 def delete_vector(doc_id: str):
-    qdrant.delete(collection_name=COLLECTION_NAME, points_selector=[doc_id])
-    logger.info(f"Deleted vector → {doc_id}")
+    qdrant.delete(
+        collection_name=COLLECTION_NAME,
+        points_selector=[str(doc_id)]
+    )
+    logger.info(f"🗑️ Deleted vector → {doc_id}")
 
 def handle_change(change):
     op = change["operationType"]

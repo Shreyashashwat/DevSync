@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - ragbot
+    env_file:
+      - backend/.env
+
+  ragbot:
+    build: ./backend/src/chatbot
+    ports:
+      - "8000:8000"
+    env_file:
+      - backend/.env

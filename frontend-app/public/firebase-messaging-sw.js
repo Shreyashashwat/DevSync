@@ -13,14 +13,14 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage(function(payload) {
-  console.log('[firebase-messaging-sw.js] Background message', payload);
+messaging.onBackgroundMessage((payload) => {
+  console.log("✅ Background message:", payload);
 
-  const notificationTitle = payload.notification?.title || 'CareSphere';
-  const notificationOptions = {
-    body: payload.notification?.body || '',
-    // icon: '/logo192.png'
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  self.registration.showNotification(
+    payload.notification?.title || "New Notification",
+    {
+      body: payload.notification?.body,
+      icon: "/logo.png",
+    }
+  );
 });
