@@ -15,7 +15,7 @@ Users can submit complaints with relevant information, and administrators can mo
 
 ## 2. Problem Statement
 
-**PS Number:** PS-XX  
+**PS Number:** PS-09  
 
 Fault reporting is typically poorly organized, often spread across WhatsApp messages, email threads, and verbal communication. This leads to:
 
@@ -202,7 +202,7 @@ GitHub Repository:
   <img src="./frontend-app/src/assets/dashboard.png?raw=true" width="700" />
 </p>
 
-### SLA Timer & Priority Indicators
+### SLA Timer 
 <p align="center">
   <img src="./frontend-app/src/assets/stats.png?raw=true" width="700" />
 </p>
