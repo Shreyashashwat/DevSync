@@ -194,7 +194,7 @@ useEffect(() => {
 
 
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-orbitron font-bold text-[#7AFF57]">
+        <h2 className="text-2xl font-orbitron font-bold text-cyan-400">
           Welcome {userna || "Engineer"}
         </h2>
         <div className="flex items-center text-2xl">
@@ -204,7 +204,7 @@ useEffect(() => {
       className={
         "mx-0.5 transition-transform duration-150 " +
         (i <= Math.round(rating)
-          ? "text-yellow-400 drop-shadow-md scale-110"
+          ? "text-cyan-400 drop-shadow-md scale-110"
           : "text-gray-500")
       }
     >
@@ -212,7 +212,7 @@ useEffect(() => {
     </span>
   ))}
 
-  <span className="ml-3 text-[#7AFF57] text-xl font-semibold tracking-wide">
+  <span className="ml-3 text-cyan-400 text-xl font-semibold tracking-wide">
     {rating.toFixed(1)} / 5
   </span>
 </div>
@@ -241,11 +241,11 @@ useEffect(() => {
         </div>
       )}
 
-      <div className="flex flex-wrap gap-4 mb-6 bg-[#003A20]/20 p-4 rounded-xl border border-[#39FF14]/30">
+      <div className="flex flex-wrap gap-4 mb-6 bg-[#003A20]/20 p-4 rounded-xl border border-cyan-500/30">
         <input
           type="text"
           placeholder="Search by title..."
-          className="flex-1 px-4 py-2 rounded-lg bg-black/40 border border-[#39FF14]/40 text-[#A6FFCB]"
+          className="flex-1 px-4 py-2 rounded-lg bg-black/40 border border-cyan-400/40 text-[#72b1e7]"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -253,7 +253,7 @@ useEffect(() => {
         <select
           value={filters.status}
           onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-          className="px-4 py-2 rounded-lg bg-[#39FF14]/30 text-white border border-[#39FF14]/40"
+          className="px-4 py-2 rounded-lg  text-white border border-cyan-600/40"
         >
           {["All", "OPEN", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"].map((s) => (
             <option key={s} className="bg-black text-white">
@@ -265,7 +265,7 @@ useEffect(() => {
         <select
           value={filters.priority}
           onChange={(e) => setFilters({ ...filters, priority: e.target.value })}
-          className="px-4 py-2 rounded-lg bg-[#39FF14]/30 text-white border border-[#39FF14]/40"
+          className="px-4 py-2 rounded-lg text-cyan-500/20 text-white border border-cyan-600/40"
         >
           {["All", "Low", "Medium", "High"].map((p) => (
             <option key={p} className="bg-black text-white">
@@ -277,11 +277,11 @@ useEffect(() => {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="px-4 py-2 rounded-lg bg-[#39FF14]/30 text-white border"
+          className="px-4 py-2 rounded-lg text-white border  border-cyan-600/40"
         >
-          <option value="latest">Latest</option>
-          <option value="oldest">Oldest</option>
-          <option value="priority">Priority</option>
+          <option value="latest" className="bg-black">Latest</option>
+          <option value="oldest" className="bg-black">Oldest</option>
+          <option value="priority" className="bg-black">Priority</option>
         </select>
       </div>
       {selectedComplaints.length > 0 && (
@@ -316,7 +316,7 @@ useEffect(() => {
 
       <div className="flex flex-col gap-5">
         {filteredComplaints.length === 0 && (
-          <p className="text-[#A6FFCB]">No complaints found.</p>
+          <p className="text-cyan-400">No complaints found.</p>
         )}
 
         {filteredComplaints.map((c) => {
@@ -346,17 +346,17 @@ useEffect(() => {
                 type="checkbox"
                 checked={selectedComplaints.includes(c._id)}
                 onChange={() => toggleComplaint(c._id)}
-                className="accent-[#7AFF57] scale-125"
+                className="accent-[#5779ff] scale-125"
               />
 
-              <h3 className="text-xl font-semibold text-[#7AFF57]">
-                {c.title} <span className="text-[#39FF14]">({c.status})</span>
+              <h3 className="text-xl font-semibold text-cyan-400">
+                {c.title} <span className="text-cyan-300">({c.status})</span>
               </h3>
             </div>
 
               <p className="mt-1 text-[#D9FFE8]">{c.description}</p>
 
-              <p className="text-sm mt-2 text-[#7AFF57]">
+              <p className="text-sm mt-2 text-cyan-200">
                 <strong>Category:</strong> {c.category} &nbsp;|&nbsp;
                 <strong>Priority:</strong> {c.priority}
               </p>
@@ -382,12 +382,12 @@ useEffect(() => {
               )}
 
               <div className="mt-4">
-                <label className="mr-2 text-[#A6FFCB]">Update Status:</label>
+                <label className="mr-2 text-[#4a8ae4]">Update Status:</label>
                 <select
                   value={c.status}
                   disabled={updating === c._id}
                   onChange={(e) => handleStatusChange(c._id, e.target.value)}
-                  className="px-3 py-2 rounded-lg bg-[#39FF14]/30 text-white border"
+                  className="px-3 py-2 rounded-lg bg-cyan-500/30 text-white border"
                 >
                   {["OPEN", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"].map(
                     (s) => (
