@@ -181,10 +181,12 @@ useEffect(() => {
     );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#00160D] via-[#003A20] to-[#000d05] text-white p-6 mt-17">
+    <div className=" w-full bg-[url('./assets/bg3.jpg')] bg-fixed bg-center bg-no-repeat bg-cover text-white   backdrop-blur-3xl  shadow-2xl ">
 
-      <div className="w-full h-20 bg-[#0D0D0D] flex items-center justify-center px-6 border-b border-[#7AFF57]">
-        <h1 className="text-3xl font-orbitron font-bold text-[#7AFF57]">
+      <div className="min-h-screen w-full bg-black/65 p-6">
+
+      <div className="w-full h-20 bg-[#013657] flex items-center justify-center px-6 border-b border-[#9c93e0] mt-14 ">
+        <h1 className="text-3xl font-orbitron font-bold text-cyan-300">
           Engineer Dashboard
         </h1>
       </div>
@@ -404,6 +406,7 @@ useEffect(() => {
           );
         })}
       </div>
+    </div>
     </div>
   );
 }
