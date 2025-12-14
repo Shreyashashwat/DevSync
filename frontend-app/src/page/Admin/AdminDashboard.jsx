@@ -6,6 +6,8 @@ import CreateUserForm from "../../components/CreateUserForm";
 import BulkUserUpload from "../../components/BulkUserUpload";
 import AdminChatbotWidget from "../../components/AdminChatbotWidget";
 import ComplaintsChart from "../../components/ComplaintChart";
+import CommentSection from "../Citizen/CommentSection";
+
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
@@ -17,6 +19,8 @@ const AdminDashboard = () => {
   const [activeView, setActiveView] = useState("dashboard");
   const [selectedComplaints, setSelectedComplaints] = useState([])
   const navigate = useNavigate();
+  const [openComments, setOpenComments] = useState({});
+
 
 
   //******************* */
@@ -24,6 +28,12 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [staffList2, setStaffList2] = useState([]);
   //******************* */
+const toggleComments = (id) => {
+  setOpenComments((prev) => ({
+    ...prev,
+    [id]: !prev[id],
+  }));
+};
 
   const toggleComplaint = (id) => {
     setSelectedComplaints((prev) =>
@@ -432,45 +442,67 @@ const AdminDashboard = () => {
                       <th className="p-3 font-semibold">Assigned To</th>
                       <th className="p-3 font-semibold">Category</th>
                       <th className="p-3 font-semibold">Deadline</th>
+                      <th className="p-3 font-semibold">Comments</th>
+
                     </tr>
                   </thead>
 
                   <tbody>
-                    {complaints.map((c) => (
-                      <tr
-                        key={c._id}
-                        className="bg-white/10 border-b border-white/20 hover:bg-white/20 transition"
-                      >
-                        {/* Checkbox for bulk actions */}
-                        <td className="p-3">
-                          <input
-                            type="checkbox"
-                            checked={selectedComplaints.includes(c._id)}
-                            onChange={() => toggleComplaint(c._id)}
-                          />
-                        </td>
+  {complaints.map((c) => (
+    <React.Fragment key={c._id}>
+      {/* MAIN COMPLAINT ROW */}
+      <tr className="bg-white/10 border-b border-white/20 hover:bg-white/20 transition">
+        <td className="p-3">
+          <input
+            type="checkbox"
+            checked={selectedComplaints.includes(c._id)}
+            onChange={() => toggleComplaint(c._id)}
+          />
+        </td>
 
-                        {/*Complaint data */}
-                        <td className="p-3">{c.title}</td>
-                        <td className="p-3">{c.status}</td>
-                        <td className="p-3">{c.assigned_to?.username || "Unassigned"}</td>
-                        <td className="p-3">{c.category}</td>
+        <td className="p-3">{c.title}</td>
+        <td className="p-3">{c.status}</td>
+        <td className="p-3">
+          {c.assigned_to?.username || "Unassigned"}
+        </td>
+        <td className="p-3">{c.category}</td>
 
-                        {/* SLA Countdown */}
-                        <td
-                          className="p-3 font-semibold"
-                          style={{
-                            color: timeLefts[c._id]?.total > 0 ? "#FFD700" : "#FF4C4C",
-                          }}
-                        >
-                          {timeLefts[c._id]?.total > 0
-                            ? `${timeLefts[c._id].days}d ${timeLefts[c._id].hours}h ${timeLefts[c._id].minutes}m ${timeLefts[c._id].seconds}s`
-                            : "Deadline passed"}
-                        </td>
-                      </tr>
+        <td
+          className="p-3 font-semibold"
+          style={{
+            color: timeLefts[c._id]?.total > 0 ? "#FFD700" : "#FF4C4C",
+          }}
+        >
+          {timeLefts[c._id]?.total > 0
+            ? `${timeLefts[c._id].days}d ${timeLefts[c._id].hours}h ${timeLefts[c._id].minutes}m ${timeLefts[c._id].seconds}s`
+            : "Deadline passed"}
+        </td>
 
-                    ))}
-                  </tbody>
+        {/* COMMENT BUTTON */}
+        <td className="p-3">
+          <button
+            onClick={() => toggleComments(c._id)}
+            className="px-3 py-1 text-sm rounded-lg border border-blue-400/50 text-blue-300 hover:bg-blue-500/20 transition"
+          >
+            💬
+          </button>
+        </td>
+      </tr>
+
+      {/* COMMENT SECTION ROW */}
+      {openComments[c._id] && (
+        <tr className="bg-black/40">
+          <td colSpan={7} className="p-4">
+            <div className="border-t border-blue-500/30 pt-3">
+              <CommentSection complaintId={c._id} />
+            </div>
+          </td>
+        </tr>
+      )}
+    </React.Fragment>
+  ))}
+</tbody>
+
 
                 </table>
               </div>
