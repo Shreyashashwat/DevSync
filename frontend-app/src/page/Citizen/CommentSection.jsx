@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axiosInstance from "../../../api/axiosInstance";
+import axiosInstance from "../../api/axiosInstance";
 
 const CommentSection = ({ complaintId }) => {
   const [comments, setComments] = useState([]);

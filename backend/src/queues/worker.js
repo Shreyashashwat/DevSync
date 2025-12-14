@@ -12,6 +12,7 @@ const buildEmailHTML = ({ title, username, description, status, deadline, extraM
       ${description ? `<p><strong>Description:</strong> ${description}</p>` : ""}
       ${status ? `<p><strong>Status:</strong> ${status}</p>` : ""}
       ${deadline ? `<p><strong>Deadline:</strong> ${new Date(deadline).toLocaleString()}</p>` : ""}
+      
       <br/>
       <p>— DevSync Team</p>
     </div>

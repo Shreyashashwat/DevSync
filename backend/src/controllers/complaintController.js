@@ -410,12 +410,12 @@ export const assignComplaint = async (req, res) => {
     console.log("comID", complaintId);
     console.log("staffID", staffId);
 
-    // ✅ Admin check
+    // Admin check
     if (req.user.role !== "admin") {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
-    // ✅ Validate staff
+    // Validate staff
     const staff = await User.findOne({
       _id: staffId,
       role: "staff",
@@ -429,7 +429,7 @@ export const assignComplaint = async (req, res) => {
       });
     }
 
-    // ✅ Assign complaint
+    // Assign complaint
     const complaint = await Complaint.findOneAndUpdate(
       { _id: complaintId, tenantId: req.user.tenantId },
       {
@@ -454,24 +454,24 @@ export const assignComplaint = async (req, res) => {
     const title = "New Complaint Assigned";
     const body = `Complaint "${complaint.title}" has been assigned to you.`;
 
-    // 🔔 Push notification
-    if (complaint.assigned_to?.fcmToken) {
-      console.log(complaint.assigned_to.fcmToken, "fcm");
-      await sendNotification(
-        complaint.assigned_to.fcmToken,
-        title,
-        body
-      );
-    }
+    // Push notification
+    // if (complaint.assigned_to?.fcmToken) {
+    //   console.log(complaint.assigned_to.fcmToken, "fcm");
+    //   await sendNotification(
+    //     complaint.assigned_to.fcmToken,
+    //     title,
+    //     body
+    //   );
+    // }
 
-    // 📧 Email notification
-    if (complaint.assigned_to?.email) {
-      await sendEmail(
-        complaint.assigned_to.email,
-        title,
-        body
-      );
-    }
+    // Email notification
+    // if (complaint.assigned_to?.email) {
+    //   await sendEmail(
+    //     complaint.assigned_to.email,
+    //     title,
+    //     body
+    //   );
+    // }
 
     // -------- Queue notification --------
     console.log(
@@ -545,7 +545,7 @@ export const updateComplaintStatus = async (req, res) => {
     await redisClient.del(`complaints:${req.user.tenantId}:staff:${complaint.assigned_to}`);
     await redisClient.del(`admin_stats_${req.user.tenantId}`);
 
-    console.log("♻️ Redis cache cleared → complaint updated");
+    console.log("Redis cache cleared → complaint updated");
 
     res.status(200).json({
       success: true,
@@ -642,13 +642,11 @@ export const updateComplaint = async (req, res) => {
       });
     }
 
-    // ✅ Update fields only if provided
     complaint.title = title ?? complaint.title;
     complaint.description = description ?? complaint.description;
     complaint.category = category ?? complaint.category;
     complaint.priority = priority ?? complaint.priority;
 
-    // ✅ Update photo ONLY if new file uploaded
     if (req.file?.path) {
       complaint.photo_url = req.file.path;
     }

@@ -11,10 +11,10 @@ import React from 'react';
 
 const StatCard = ({ label, value, color }) => {
   return (
-    <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-      <div className="flex flex-col items-center space-y-2">
+    <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full ">
+      <div className="flex flex-col items-center space-y-2 ">
         <div 
-          className="text-3xl font-bold"
+          className="text-2xl font-bold  "
           style={{ color }}
         >
           {value || 0}
