@@ -77,25 +77,77 @@ export function AuthButtons() {
 
   const handleLogout = () => {
     localStorage.clear();
-    alert("Logged out");
     navigate("/login");
   };
 
+  const baseBtn = {
+    padding: "8px 18px",
+    borderRadius: "999px",
+    fontWeight: 600,
+    textDecoration: "none",
+    backdropFilter: "blur(12px)",
+    border: "1px solid rgba(255,255,255,0.25)",
+    transition: "all 0.3s ease",
+    cursor: "pointer",
+  };
+
   return (
-    <div style={{ display: "flex", gap: "1rem" }}>
+    <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
       {!token ? (
         <>
-          <Link to="/register" style={{ color: COLORS.yellow }}>Register</Link>
-          <Link to="/login" style={{ color: COLORS.yellow }}>Login</Link>
+          {/* Register */}
+          <Link
+            to="/register"
+            style={{
+              ...baseBtn,
+              background: "rgba(244,208,0,0.15)",
+              color: COLORS.yellow,
+            }}
+            onMouseEnter={(e) =>
+              (e.target.style.boxShadow = "0 0 12px rgba(244,208,0,0.8)")
+            }
+            onMouseLeave={(e) => (e.target.style.boxShadow = "none")}
+          >
+            Register
+          </Link>
+
+          {/* Login */}
+          <Link
+            to="/login"
+            style={{
+              ...baseBtn,
+              background: "rgba(43,76,179,0.2)",
+              color: COLORS.white,
+            }}
+            onMouseEnter={(e) =>
+              (e.target.style.boxShadow = "0 0 12px rgba(43,76,179,0.9)")
+            }
+            onMouseLeave={(e) => (e.target.style.boxShadow = "none")}
+          >
+            Login
+          </Link>
         </>
       ) : (
-        <button onClick={handleLogout} style={{ color: COLORS.white }}>
+        /* Logout */
+        <button
+          onClick={handleLogout}
+          style={{
+            ...baseBtn,
+            background: "rgba(212,24,31,0.25)",
+            color: COLORS.white,
+          }}
+          onMouseEnter={(e) =>
+            (e.target.style.boxShadow = "0 0 14px rgba(212,24,31,0.9)")
+          }
+          onMouseLeave={(e) => (e.target.style.boxShadow = "none")}
+        >
           Logout
         </button>
       )}
     </div>
   );
 }
+
 
 function Navbar() {
   return (

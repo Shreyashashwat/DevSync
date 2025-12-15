@@ -141,6 +141,7 @@ html, body, #root {
   background: var(--accent-pink);
   color: white;
   box-shadow: 0 0 20px rgba(231, 85, 175, 0.3);
+  padding: auto;
 }
 
 .register-btn:hover {
