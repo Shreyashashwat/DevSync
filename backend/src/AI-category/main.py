@@ -13,7 +13,7 @@ class ComplaintIn(BaseModel):
 
 @app.post("/submit")
 async def submit(c: ComplaintIn):
-    category = get_category(c.title)
+    category = get_category(c.title,c.description)
     priority = get_priority(c.description)
 
     result = complaints.insert_one({

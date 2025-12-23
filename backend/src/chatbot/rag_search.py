@@ -14,8 +14,10 @@ def search_qdrant(
     user_id: str | None = None,
     top_k: int = 5
 ):
+    # ✅ Encode query
     query_vec = model.encode(query).tolist()
 
+    # ✅ Base tenant filter
     must_filters = [
         models.FieldCondition(
             key="tenant_id",
@@ -24,7 +26,7 @@ def search_qdrant(
     ]
 
     # ✅ ROLE-BASED ACCESS
-    if role == "staff":
+    if role == "staff" and user_id:
         must_filters.append(
             models.FieldCondition(
                 key="assigned_to",
@@ -32,7 +34,7 @@ def search_qdrant(
             )
         )
 
-    elif role == "citizen":
+    elif role == "citizen" and user_id:
         must_filters.append(
             models.FieldCondition(
                 key="submitted_by",
@@ -40,25 +42,25 @@ def search_qdrant(
             )
         )
 
-    # ✅ ADMIN → ONLY TENANT FILTER (nothing else)
-
     query_filter = models.Filter(must=must_filters)
 
+    # ✅ CORRECT QDRANT QUERY (1.16+)
+    # ✅ CORRECT QDRANT QUERY (1.16+)
     hits = qdrant.query_points(
         collection_name=COLLECTION_NAME,
         query=query_vec,
         query_filter=query_filter,
-        limit=top_k
-    ).points
-
+        limit=top_k,
+        with_payload=True
+    )
+   
     contexts = []
 
-    for hit in hits:
+    for hit in hits.points:
         if not hit.payload or "doc_id" not in hit.payload:
             continue
 
         doc = docs.find_one({"_id": ObjectId(hit.payload["doc_id"])})
-
         if not doc:
             continue
 
@@ -85,7 +87,7 @@ def search_qdrant(
 # -------------------------------
 def call_gemini(prompt: str) -> str:
     url = (
-        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"https://generativelanguage.googleapis.com/v1/models/"
         f"{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY.strip()}"
     )
 
@@ -131,14 +133,14 @@ def answer_question(
     )
 
     prompt = f"""
-Answer ONLY using the information below.
-If unsure, say: "I don't know."
+        Answer ONLY using the information below.
+        If unsure, say: "I don't know."
 
-Documents:
-{context}
+        Documents:
+        {context}
 
-Question: {query}
-Answer:
-"""
+        Question: {query}
+        Answer:
+        """
 
     return call_gemini(prompt)

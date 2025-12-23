@@ -2,14 +2,26 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
+# system deps
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+# upgrade pip once
 RUN pip install --upgrade pip
-RUN pip uninstall -y numpy || true
+
+# 🔥 install CPU-only torch FIRST (cached layer)
+RUN pip install --no-cache-dir \
+    torch==2.1.0 \
+    --index-url https://download.pytorch.org/whl/cpu
+
+# install rest of dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# copy app code
 COPY . .
 
 EXPOSE 8000
+
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,27 +1,55 @@
-from sentence_transformers import SentenceTransformer, util
+import re
+import numpy as np
+from fastembed import TextEmbedding
 import google.generativeai as genai
 from config import GEMINI_API_KEY, CATEGORY_THRESHOLD
 
+# -------------------------------
+# Gemini setup
+# -------------------------------
 genai.configure(api_key=GEMINI_API_KEY)
-gemini = genai.GenerativeModel('gemini-2.5-flash')
-model = SentenceTransformer('all-MiniLM-L6-v2')
+gemini = genai.GenerativeModel("gemini-2.5-flash")
 
+# -------------------------------
+# FastEmbed setup
+# -------------------------------
+embedder = TextEmbedding(
+    model_name="BAAI/bge-small-en-v1.5",
+    max_length=512
+)
+
+# -------------------------------
+# Categories
+# -------------------------------
 CATEGORIES = ["Infrastructure", "Sanitation", "Water", "Electricity"]
-cat_embs = {cat: model.encode(cat) for cat in CATEGORIES}
 
+def embed(text: str) -> np.ndarray:
+    return next(embedder.embed([text]))
+
+cat_embs = {cat: embed(cat) for cat in CATEGORIES}
+
+# -------------------------------
+# Keyword mapping (UNCHANGED)
+# -------------------------------
 KEYWORD_MAPPING = {
     "water": "Water",
     "leak": "Water", "pipe": "Water", "tap": "Water", "flood": "Water", "no water": "Water", "jal": "Water",
-    
+
     "light": "Electricity", "electricity": "Electricity", "power": "Electricity", "bijli": "Electricity",
     "current": "Electricity", "bulb": "Electricity", "wire": "Electricity", "outage": "Electricity",
-    
+
     "road": "Infrastructure", "pothole": "Infrastructure", "bridge": "Infrastructure",
     "drain": "Infrastructure", "manhole": "Infrastructure", "footpath": "Infrastructure",
-    
+
     "garbage": "Sanitation", "kachra": "Sanitation", "dustbin": "Sanitation", "sewage": "Sanitation",
     "toilet": "Sanitation", "smell": "Sanitation", "waste": "Sanitation"
 }
+
+
+# Utils (UNCHANGED)
+
+def cosine(a: np.ndarray, b: np.ndarray) -> float:
+    return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
 
 def simple_clean(title: str) -> str:
     text = title.lower()
@@ -33,33 +61,43 @@ def simple_clean(title: str) -> str:
     clean_words = []
     for word in words:
         word = word.strip()
-        if len(word) > 2: 
+        if len(word) > 2:
             if word.endswith("ing"): word = word[:-3]
             if word.endswith("ed"):  word = word[:-2]
             if word.endswith("es"):  word = word[:-2]
-            if word.endswith("s") and len(word) > 3: word = word[:-1] 
+            if word.endswith("s") and len(word) > 3: word = word[:-1]
             clean_words.append(word)
-    
+
     return " ".join(clean_words)
 
-def get_category(title: str) -> str:
-    text = title.lower()
-    
+# -------------------------------
+# Category classifier (FastEmbed)
+# -------------------------------
+def get_category(title: str, description: str = "") -> str:
+    text = f"{title} {description}".lower()
+
+
+    # 1️ Keyword-first
     for keyword, cat in KEYWORD_MAPPING.items():
         if keyword in text:
             return cat
-    
-    cleaned = simple_clean(title)
+
+    # 2️ Embedding fallback
+    cleaned = simple_clean(f"{title} {description}")
     if not cleaned:
         return "Others"
-    
-    emb = model.encode(cleaned)
-    sims = {cat: util.cos_sim(emb, cat_embs[cat])[0][0].item() for cat in CATEGORIES}
+
+    emb = embed(cleaned)
+    sims = {cat: cosine(emb, cat_embs[cat]) for cat in CATEGORIES}
+
     best_cat = max(sims, key=sims.get)
     best_score = sims[best_cat]
-    
-    return best_cat if best_score >= 0.65 else "Others"
-    
+
+    return best_cat if best_score >= CATEGORY_THRESHOLD else "Others"
+
+# -------------------------------
+# Priority classifier - CAPITALIZED OUTPUT
+# -------------------------------
 def get_priority(description: str) -> str:
     low_keywords = [
         "suggestion", "suggest", "request", "please install", "please put", "please provide",
@@ -67,30 +105,34 @@ def get_priority(description: str) -> str:
         "want", "wish", "hope", "new park", "new bench", "paint", "beautification",
         "tree", "plant", "garden", "playground", "swing", "slide"
     ]
-    
+
     desc_lower = description.lower()
-    
+
     if any(kw in desc_lower for kw in low_keywords):
-        return "low"
+        return "Low"  # Capitalized
+    if "leak" in desc_lower or "leaking" in desc_lower:
+        return "High"  # Capitalized
+    if re.search(r"\b\d+\s*(day|days|week|weeks)\b", desc_lower):
+        if "water" in desc_lower or "electricity" in desc_lower or "power" in desc_lower:
+            return "High"  # Capitalized
+
+
     prompt = f"""
-    You are a priority classifier for complaints. Classify the priority as 'high', 'medium', or 'low' based on urgency and impact.
+    You are a priority classifier for complaints. Classify the priority as 'high', 'medium', or 'low'.
 
-    Guidelines:
-    - High: Immediate danger to life, health, or property. Keywords: emergency, urgent, critical, danger, fire, leak, injury, explosion, threat, life-threatening, outage (power/water), broken (essential), not working (critical services).
-      Examples: "Fire in building, people trapped", "Gas leak smelling strong", "Power outage in hospital", "Flooding causing structural damage".
-    
-    - Medium: Significant issues affecting daily life but not immediate danger. Keywords: delay, issue, problem, malfunction, billing error, charge dispute, slow service, defect.
-      Examples: "Street light not working", "Billing overcharge", "Delayed garbage collection", "Minor water drip".
-    
-    - Low: Suggestions, minor inconveniences, or non-urgent feedback. Keywords: suggestion, feedback, minor, improvement, query, request, cosmetic.
-      Examples: "Suggestion for better park benches", "General inquiry about services", "Minor cosmetic repair needed".
-
-    Analyze the description: '{description}'
-    Return ONLY the priority level: 'high', 'medium', or 'low'. No explanations.
+    Description: "{description}"
+    Return ONLY one word.
     """
+
     resp = gemini.generate_content(prompt)
     priority = resp.text.strip().lower()
 
-    if priority not in ["high", "medium", "low"]:
-        priority = "low"
-    return priority
+    # Capitalize the result
+    if priority == "high":
+        return "High"
+    elif priority == "medium":
+        return "Medium"
+    elif priority == "low":
+        return "Low"
+    else:
+        return "Low"  # Default capitalized

@@ -271,7 +271,7 @@ dotenv.config();
 import { taskQueue } from "../queues/queue.js";
 import Complaint from "../models/Complaint.js";
 import User from "../models/User.js";
-
+import axios from "axios";
 import redisClient from "../Configs/redisClient.js";
 
 // -------------------------------------------------
@@ -301,6 +301,8 @@ export const rateStaff = async (req, res) => {
 };
 
 // -------------------------------------------------
+
+
 export const submitComplaint = async (req, res) => {
   try {
     if (!req.user?.id) {
@@ -314,13 +316,32 @@ export const submitComplaint = async (req, res) => {
       });
     }
 
-    const { title, description, category, priority, latitude, longitude, address } = req.body;
+    const { title, description, latitude, longitude, address } = req.body;
 
     if (!title?.trim() || !description?.trim()) {
       return res.status(400).json({
         success: false,
         message: "Title and description are required",
       });
+    }
+
+    // 🔥 CALL AI SERVICE
+    let category = "Other";
+    let priority = "Low";
+
+    try {
+      const aiRes = await axios.post(
+        "http://ai-category:7001/submit",
+        { title, description },
+        { timeout: 10000 }
+      );
+
+      if (aiRes?.data?.category) category = aiRes.data.category;
+      if (aiRes?.data?.priority) priority = aiRes.data.priority;
+
+      console.log("AI RESULT:", aiRes.data);
+    } catch (aiErr) {
+      console.warn("AI service failed, using defaults");
     }
 
     const photo_url = req.file?.path || "";
@@ -330,8 +351,8 @@ export const submitComplaint = async (req, res) => {
       submitted_by: req.user.id,
       title: title.trim(),
       description: description.trim(),
-      category: category || "Other",
-      priority: priority || "Low",
+      category,
+      priority,
       photo_url,
       location: {
         latitude: latitude ? Number(latitude) : undefined,
@@ -345,8 +366,6 @@ export const submitComplaint = async (req, res) => {
     await redisClient.del(`complaints:${req.user.tenantId}:admin`);
     await redisClient.del(`admin_stats_${req.user.tenantId}`);
 
-    console.log("Redis cache cleared → complaint created");
-
     res.status(201).json({
       success: true,
       message: "Complaint submitted successfully",
@@ -357,6 +376,7 @@ export const submitComplaint = async (req, res) => {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
 
 // -------------------------------------------------
 export const getComplaints = async (req, res) => {

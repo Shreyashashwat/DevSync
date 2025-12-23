@@ -5,15 +5,17 @@ const ComplaintForm = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    category: "Other",
-    priority: "Low",
+   
     address: "",
     latitude: null,
     longitude: null,
     photo: null,
   });
+  const [aiPreview, setAiPreview] = useState(null);
+
 
   const [preview, setPreview] = useState(null);
+
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -52,43 +54,53 @@ const ComplaintForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!formData.latitude || !formData.longitude) {
-      alert("Location needed");
-      return;
-    }
+  if (!formData.latitude || !formData.longitude) {
+    alert("Location needed");
+    return;
+  }
 
-    const data = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (formData[key]) data.append(key, formData[key]);
-    });
+  const data = new FormData();
+  Object.keys(formData).forEach((key) => {
+    if (formData[key]) data.append(key, formData[key]);
+  });
 
-    try {
-      const token = localStorage.getItem("token");
-      const res = await axios.post(
-        "http://localhost:5000/api/complaints",
-        data,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+  try {
+    const token = localStorage.getItem("token");
 
-      alert(res.data.message || "Complaint Submitted!");
+    const res = await axios.post(
+      "http://localhost:5000/api/complaints",
+      data,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-      setFormData({
-        title: "",
-        description: "",
-        category: "Other",
-        priority: "Low",
-        address: "",
-        latitude: formData.latitude,
-        longitude: formData.longitude,
-        photo: null,
+    // ✅ backend already predicted & saved
+    alert("Complaint submitted successfully!");
+
+    // OPTIONAL: show AI result returned from backend
+    if (res.data.category && res.data.priority) {
+      setAiPreview({
+        category: res.data.complaint.category,
+        priority: res.data.complaint.priority,
       });
-      setPreview(null);
-    } catch (err) {
-      alert("Error: " + (err.response?.data?.message || err.message));
     }
-  };
+
+    setFormData({
+      title: "",
+      description: "",
+      address: "",
+      latitude: formData.latitude,
+      longitude: formData.longitude,
+      photo: null,
+    });
+    setPreview(null);
+
+  } catch (err) {
+    alert("Error: " + (err.response?.data?.message || err.message));
+  }
+};
+
 
   return (
     <div className="min-h-screen flex justify-center items-center p-4 font-poppins">
@@ -129,37 +141,9 @@ const ComplaintForm = () => {
             />
           </div>
 
-          <div>
-            <label className="text-green-900 font-medium">Category</label>
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="w-full p-3 border border-green-700 rounded-lg 
-              text-black bg-white focus:ring-2 focus:ring-green-500 outline-none"
-            >
-              <option>Infrastructure</option>
-              <option>Sanitation</option>
-              <option>Water</option>
-              <option>Electricity</option>
-              <option>Other</option>
-            </select>
-          </div>
+          
 
-          <div>
-            <label className="text-green-900 font-medium">Priority</label>
-            <select
-              name="priority"
-              value={formData.priority}
-              onChange={handleChange}
-              className="w-full p-3 border border-green-700 rounded-lg 
-              text-black bg-white"
-            >
-              <option>Low</option>
-              <option>Medium</option>
-              <option>High</option>
-            </select>
-          </div>
+          
 
           {/*******************/}
           <div>
@@ -211,6 +195,13 @@ const ComplaintForm = () => {
           </button>
 
           {/* ************ */}
+          {aiPreview && (
+  <div className="p-3 bg-green-100 rounded-lg text-green-900">
+    <p><b>Predicted Category:</b> {aiPreview.category}</p>
+    <p><b>Predicted Priority:</b> {aiPreview.priority}</p>
+  </div>
+)}
+
           <button
             type="submit"
             className="w-full bg-green-800 text-white py-3 rounded-lg 

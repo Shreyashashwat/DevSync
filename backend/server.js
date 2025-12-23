@@ -38,8 +38,6 @@ app.use(cors({
 app.get('/', (req, res) => {
   res.send('Server is working');
 });
-import aiRoutes from "./src/routes/aiRoutes.js";
-app.use("/api/ai", aiRoutes);
 
 
 app.use('/api/auth', authRoutes);
@@ -63,7 +61,7 @@ app.post('/api/users/:id/rate', protect, async (req, res) => {
   }
 // app.use("/api/v1/save-token",saveNotificationToken)
 
-app.use("/api/comments", commentRoutes);
+
 
 
 
@@ -87,6 +85,7 @@ app.use("/api/comments", commentRoutes);
 
 import testQueueRoutes from "./src/routes/testQueueRoutes.js";
 app.use("/api/test", testQueueRoutes);
+app.use("/api/comments", commentRoutes);
 // export default router;
 // app.use('/api/hi',(req,res)=>{
 //   res.send('hi')

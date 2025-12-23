@@ -7,34 +7,34 @@ export default function AdminChatbotWidget() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+ const sendMessage = async () => {
+  if (!input.trim()) return;
 
-    const userMsg = { role: "user", text: input };
-    setMessages((prev) => [...prev, userMsg]);
-    setInput("");
-    setLoading(true);
+  const userMsg = { role: "user", text: input };
+  setMessages((prev) => [...prev, userMsg]);
+  setInput("");
+  setLoading(true);
 
-    try {
-      const res = await axiosInstance.post("/api/chat/ask", {
-         question: input,
-  tenantId: ADMIN_TENANT_ID,
-  role: "admin",
-      });
+  try {
+    const res = await axiosInstance.post("/api/chat/ask", {
+      question: input,   // ✅ ONLY send question
+    });
 
-      setMessages((prev) => [
-        ...prev,
-        { role: "bot", text: res.data.answer },
-      ]);
-    } catch (e) {
-      setMessages((prev) => [
-        ...prev,
-        { role: "bot", text: "⚠️ AI service unavailable" },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setMessages((prev) => [
+      ...prev,
+      { role: "bot", text: res.data.answer },
+    ]);
+  } catch (e) {
+    console.error("CHAT ERROR:", e.response?.data || e.message);
+    setMessages((prev) => [
+      ...prev,
+      { role: "bot", text: "⚠️ AI service unavailable" },
+    ]);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <>
