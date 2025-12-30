@@ -179,113 +179,115 @@ export default function ComplaintLifecycle() {
       </div>
     );
 
- return (
-  <>
-    <div className="space-y-6 mt-6">
-      {complaints.map((c) => {
-        const timeLeft = timeLefts[c._id];
-        const isOverdue = timeLeft?.total <= 0;
+  return (
+    <>
+      <div className="space-y-6 mt-6">
+        {complaints.map((c) => {
+          const timeLeft = timeLefts[c._id];
+          const isOverdue = timeLeft?.total <= 0;
 
-        return (
-          <div
-            key={c._id}
-            className="
-              relative
-              bg-white/10
-              backdrop-blur-xl
-              rounded-2xl
-              border border-white/20
-              p-6
-              shadow-lg
-              hover:shadow-[0_0_30px_rgba(0,255,140,0.25)]
-              transition-shadow
-            "
-          >
-            {/* STATUS BADGE */}
-            <span
-              className={`
-                absolute top-4 left-4 px-3 py-1 text-xs rounded-full font-semibold
-                ${
-                  c.status === "OPEN"
-                    ? "bg-yellow-400/20 text-yellow-300"
-                    : c.status === "RESOLVED"
-                    ? "bg-green-400/20 text-green-300"
-                    : "bg-blue-400/20 text-blue-300"
-                }
-              `}
-            >
-              {c.status}
-            </span>
-
-            {/* COMMENT TOGGLE */}
-            <button
-              onClick={() => toggleComments(c._id)}
+          return (
+            <div
+              key={c._id}
               className="
+              relative
+              glass-panel
+              rounded-2xl
+              border border-cyan-500/30
+              p-6
+              shadow-[0_0_15px_rgba(0,243,255,0.05)]
+              hover:shadow-[0_0_25px_rgba(0,243,255,0.15)]
+              transition-all
+            "
+            >
+              {/* STATUS BADGE */}
+              <span
+                className={`
+                absolute top-4 left-4 px-3 py-1 text-xs rounded-full font-semibold border
+                ${c.status === "OPEN"
+                    ? "bg-yellow-400/10 text-yellow-300 border-yellow-400/30"
+                    : c.status === "RESOLVED"
+                      ? "bg-green-400/10 text-green-300 border-green-400/30"
+                      : "bg-blue-400/10 text-blue-300 border-blue-400/30"
+                  }
+              `}
+              >
+                {c.status}
+              </span>
+
+              {/* COMMENT TOGGLE */}
+              <button
+                onClick={() => toggleComments(c._id)}
+                className="
                 absolute top-4 right-4
                 px-3 py-1 text-xs font-semibold
                 rounded-md
-                border border-[#00ff8c]/40
-                text-[#00ff8c]
+                border border-cyan-400/40
+                text-cyan-300
                 bg-black/30
-                hover:bg-[#00ff8c]
-                hover:text-black
-                transition
+                hover:bg-cyan-500/20
+                hover:scale-105
+                transition-all
               "
-            >
-              {openComments[c._id] ? "Close" : "Comments"}
-            </button>
+              >
+                {openComments[c._id] ? "Close" : "Comments"}
+              </button>
 
-            {/* CONTENT */}
-            <div className="mt-6 space-y-3">
-              <h3 className="text-xl font-semibold text-[#B4FF5A]">
-                {c.title}
-              </h3>
+              {/* CONTENT */}
+              <div className="mt-6 space-y-3">
+                <h3 className="text-xl font-bold font-orbitron text-cyan-400 drop-shadow-md">
+                  {c.title}
+                </h3>
 
-              <p className="text-white/80 leading-relaxed">
-                {c.description}
-              </p>
-            </div>
-
-            {/* SLA + RATING */}
-            <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
-              {/* SLA */}
-              {timeLeft && (
-                <p
-                  className={`text-sm font-medium ${
-                    isOverdue ? "text-red-400" : "text-yellow-300"
-                  }`}
-                >
-                  {isOverdue
-                    ? "⚠ Deadline passed"
-                    : `⏱ ${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`}
+                <p className="text-cyan-100/80 leading-relaxed font-inter">
+                  {c.description}
                 </p>
-              )}
-
-              {/* RATING */}
-              {c.status == "RESOLVED" && (
-  <Rating
-    style={{ maxWidth: 120 }}
-    value={ratings[c._id] || 0}
-    onChange={(r) => {
-      submitRating(c._id, r);
-      handleRatingChange(c._id, r);
-    }}
-  />
-)}
-            </div>
-
-            {/* COMMENTS PANEL */}
-            {openComments[c._id] && (
-              <div className="mt-6 pt-4 border-t border-white/20">
-                <CommentSection complaintId={c._id} />
               </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  </>
-);
+
+              {/* SLA + RATING */}
+              <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
+                {/* SLA */}
+                {timeLeft && (
+                  <p
+                    className={`text-sm font-medium ${isOverdue ? "text-red-400 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]" : "text-yellow-300"
+                      }`}
+                  >
+                    {isOverdue
+                      ? "⚠ Deadline passed"
+                      : `⏱ ${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`}
+                  </p>
+                )}
+
+                {/* RATING */}
+                {c.status == "RESOLVED" && (
+                  <Rating
+                    style={{ maxWidth: 120 }}
+                    value={ratings[c._id] || 0}
+                    onChange={(r) => {
+                      submitRating(c._id, r);
+                      handleRatingChange(c._id, r);
+                    }}
+                    itemStyles={{
+                      itemShapes: 'start',
+                      activeFillColor: '#00f3ff',
+                      inactiveFillColor: 'rgba(0, 243, 255, 0.2)'
+                    }}
+                  />
+                )}
+              </div>
+
+              {/* COMMENTS PANEL */}
+              {openComments[c._id] && (
+                <div className="mt-6 pt-4 border-t border-cyan-500/20">
+                  <CommentSection complaintId={c._id} />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
 
 }
 
