@@ -6,9 +6,7 @@ from rag_search import answer_question
 from vector_sync import run_background_sync
 
 
-# -------------------------------
-# ✅ App lifecycle (UNCHANGED)
-# -------------------------------
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("RAG service starting... Syncing MongoDB → Qdrant")
@@ -24,9 +22,7 @@ app = FastAPI(
 )
 
 
-# -------------------------------
-# ✅ REQUEST MODEL (NEW)
-# -------------------------------
+
 class AskRequest(BaseModel):
     question: str
     tenant_id: str
@@ -34,9 +30,7 @@ class AskRequest(BaseModel):
     user_id: str | None = None
 
 
-# -------------------------------
-# ✅ RAG ENDPOINT (FIXED)
-# -------------------------------
+
 @app.post("/ask")
 async def ask(req: AskRequest):
     answer = answer_question(
@@ -48,9 +42,7 @@ async def ask(req: AskRequest):
     return {"answer": answer}
 
 
-# -------------------------------
-# ✅ HEALTH CHECK (UNCHANGED)
-# -------------------------------
+
 @app.get("/")
 async def root():
     return {"status": "RAG service is running and fully synced!"}

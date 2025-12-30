@@ -63,7 +63,7 @@ export default function Login() {
       <div className="w-full max-w-md animate-fade-in-up relative z-10">
 
         {/* FLOATING CARD */}
-        <div className="glass-panel p-10 animate-float border border-cyan-500/30">
+        <div className="glass-panel p-10 animate-float border border-cyan-500/30 ">
 
           {/* TITLE */}
           <h2 className="neon-text text-3xl font-bold text-center mb-8 tracking-wider">

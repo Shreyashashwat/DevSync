@@ -17,7 +17,7 @@ export default function AdminChatbotWidget() {
 
   try {
     const res = await axiosInstance.post("/api/chat/ask", {
-      question: input,   // ✅ ONLY send question
+      question: input,  
     });
 
     setMessages((prev) => [
@@ -41,7 +41,7 @@ export default function AdminChatbotWidget() {
       {/* Floating Button */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 z-50 bg-green-600 hover:bg-green-500
+        className="fixed bottom-6 right-6 z-50 bg-purple-600 hover:bg-green-500
                    text-white p-4 rounded-full shadow-lg"
       >
         🤖
@@ -52,7 +52,7 @@ export default function AdminChatbotWidget() {
         <div className="fixed bottom-24 right-6 z-50 w-80 h-[420px]
                         bg-[#0f172a] rounded-xl shadow-2xl flex flex-col">
           
-          <div className="p-3 bg-green-600 rounded-t-xl font-bold">
+          <div className="p-3 bg-purple-600 rounded-t-xl font-bold">
             Admin AI Assistant
           </div>
 
@@ -83,7 +83,7 @@ export default function AdminChatbotWidget() {
 
           <div className="p-2 flex gap-2 border-t border-gray-700">
             <input
-              className="flex-1 p-2 rounded text-black text-sm"
+              className="flex-1 p-2 rounded text-white text-sm"
               placeholder="Ask anything..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -91,7 +91,7 @@ export default function AdminChatbotWidget() {
             />
             <button
               onClick={sendMessage}
-              className="px-3 bg-green-600 rounded text-sm font-bold"
+              className="px-3 bg-purple-600 rounded text-sm font-bold"
             >
               Send
             </button>
