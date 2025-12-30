@@ -30,9 +30,8 @@ for doc in docs.find():
 
     vector = model.encode(text).tolist()
 
-    # ✅ FIX: Use MongoDB ID as Qdrant point ID (consistent with vector_sync.py)
     point = PointStruct(
-        id=mongo_id,  # Use MongoDB ID, not random UUID
+        id=mongo_id, 
         vector=vector,
         payload={
             "doc_id": mongo_id,   
