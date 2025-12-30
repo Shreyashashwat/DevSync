@@ -48,142 +48,103 @@ export default function Register() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center mt-10 justify-center bg-black overflow-hidden">
+    <div className="grid-bg min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
 
-      
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            `linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)), url("/src/assets/powerranger-bg.jpg")`,
-        }}
-      />
+      {/* AMBIENT ORBS */}
+      <div className="absolute w-[500px] h-[500px] bg-blue-600/20 blur-[130px] top-[-100px] left-[-150px] pointer-events-none mix-blend-screen animate-pulse"></div>
+      <div className="absolute w-[600px] h-[600px] bg-cyan-400/10 blur-[130px] bottom-[-100px] right-[-150px] pointer-events-none mix-blend-screen animate-pulse"></div>
 
-      
-      <div
-        className="absolute inset-0 opacity-[0.18] "
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 38px)",
-        }}
-      ></div>
+      <div className="w-full max-w-md animate-fade-in-up relative z-10">
 
+        <div className="glass-panel p-10 animate-float border border-cyan-500/30">
 
-      <div className="absolute w-[350px] h-[350px] bg-blue-500 blur-[150px] opacity-25 top-[-90px] left-[-120px]"></div>
+          <h2 className="neon-text text-2xl font-bold text-center mb-8 tracking-wider leading-relaxed">
+            Admin Onboarding
+          </h2>
 
-  
-      <div className="absolute w-[380px] h-[380px] bg-yellow-400 blur-[170px] opacity-25 bottom-[-110px] right-[-120px]"></div>
+          <form onSubmit={handleSubmit} className="space-y-4">
 
-     
-      <div className="relative z-10 w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-10 py-10 shadow-2xl">
+            <div className="group">
+              <label className="block mb-1 text-cyan-50 font-bold font-orbitron text-xs tracking-widest uppercase shadow-black drop-shadow-md">
+                Username
+              </label>
+              <input
+                type="text"
+                name="username"
+                placeholder="Enter username"
+                onChange={handleChange}
+                required
+                className="neon-input w-full p-3 rounded-lg bg-black/40 text-white font-semibold placeholder-cyan-200/60 focus:bg-cyan-900/20 border-cyan-500/50"
+              />
+            </div>
 
-     
-        <h2
-          className="text-3xl font-bold text-center  mb-8"
-          style={{
-            fontFamily: "Orbitron",
-            background: "linear-gradient(to right, #f4d000, white)",
-            WebkitBackgroundClip: "text",
-            color: "transparent",
-          }}
-        >
-          Admin Onboarding
-        </h2>
+            <div className="group">
+              <label className="block mb-1 text-cyan-50 font-bold font-orbitron text-xs tracking-widest uppercase shadow-black drop-shadow-md">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter email"
+                onChange={handleChange}
+                required
+                className="neon-input w-full p-3 rounded-lg bg-black/40 text-white font-semibold placeholder-cyan-200/60 focus:bg-cyan-900/20 border-cyan-500/50"
+              />
+            </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="group">
+              <label className="block mb-1 text-cyan-50 font-bold font-orbitron text-xs tracking-widest uppercase shadow-black drop-shadow-md">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                onChange={handleChange}
+                required
+                minLength={6}
+                className="neon-input w-full p-3 rounded-lg bg-black/40 text-white font-semibold placeholder-cyan-200/60 focus:bg-cyan-900/20 border-cyan-500/50"
+              />
+            </div>
 
-        
-          <div>
-            <label className="block mb-1 text-white/75 font-semibold text-sm">
-              Username
-            </label>
-            <input
-              type="text"
-              name="username"
-              placeholder="Enter username"
-              onChange={handleChange}
-              required
-              className="w-full p-3 rounded-lg bg-white/20 border border-white/30 
-              text-white placeholder-white/60 focus:border-blue-400 focus:ring-2 
-              focus:ring-blue-500/40 outline-none transition"
-            />
+            <div className="group">
+              <label className="block mb-1 text-cyan-50 font-bold font-orbitron text-xs tracking-widest uppercase shadow-black drop-shadow-md">
+                Tenant Code
+              </label>
+              <input
+                type="text"
+                name="tenantCode"
+                placeholder="e.g. CHN, DEL, BLR"
+                onChange={handleChange}
+                required
+                className="neon-input w-full p-3 rounded-lg bg-black/40 text-white font-semibold placeholder-cyan-200/60 focus:bg-cyan-900/20 border-cyan-500/50 uppercase"
+              />
+            </div>
+
+            {error && (
+              <div className="p-3 rounded border border-red-500/30 bg-red-500/10 text-red-200 text-sm text-center font-bold tracking-wide shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                ⚠ {error}
+              </div>
+            )}
+
+            <button
+              className="neon-btn w-full py-4 rounded-lg font-bold text-lg mt-4 bg-gradient-to-r from-blue-600/20 to-cyan-400/20 hover:from-blue-600/40 hover:to-cyan-400/40 border border-cyan-400/50"
+              disabled={isLoading}
+            >
+              {isLoading ? "Registering..." : "Register"}
+            </button>
+          </form>
+
+          <div className="mt-8 text-center">
+            <p className="text-cyan-200/50 text-xs tracking-widest uppercase mb-2">Already have an account?</p>
+            <span
+              className="link-cyan cursor-pointer font-bold text-sm tracking-widest uppercase pb-1 border-b border-transparent hover:border-cyan-400"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </span>
           </div>
-
-        
-          <div>
-            <label className="block mb-1 text-white/75 font-semibold text-sm">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter email"
-              onChange={handleChange}
-              required
-              className="w-full p-3 rounded-lg bg-white/20 border border-white/30 
-              text-white placeholder-white/60 focus:border-blue-400 focus:ring-2 
-              focus:ring-blue-500/40 outline-none transition"
-            />
-          </div>
-
-
-          <div>
-            <label className="block mb-1 text-white/75 font-semibold text-sm">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter password"
-              onChange={handleChange}
-              required
-              minLength={6}
-              className="w-full p-3 rounded-lg bg-white/20 border border-white/30 
-              text-white placeholder-white/60 focus:border-blue-400 focus:ring-2 
-              focus:ring-blue-500/40 outline-none transition"
-            />
-          </div>
-
-         
-          <div>
-            <label className="block mb-1 text-white/75 font-semibold text-sm">
-              Tenant Code
-            </label>
-            <input
-              type="text"
-              name="tenantCode"
-              placeholder="e.g. CHN, DEL, BLR"
-              onChange={handleChange}
-              required
-              className="w-full p-3 rounded-lg bg-white/20 border border-white/30 
-              text-white placeholder-white/60 focus:border-blue-400 focus:ring-2 
-              focus:ring-blue-500/40 outline-none transition uppercase"
-            />
-          </div>
-
-      
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-
-          <button
-            className="w-full py-3 bg-blue-600 hover:bg-blue-500 transition 
-            rounded-lg text-white font-semibold shadow-lg shadow-blue-500/40 
-            border border-transparent hover:border-blue-400"
-            disabled={isLoading}
-          >
-            {isLoading ? "Registering..." : "Register"}
-          </button>
-        </form>
-
-
-        <p className="text-center text-white/70 mt-6 text-sm">
-          Already have an account?{" "}
-          <span
-            className="text-yellow-400 cursor-pointer font-semibold hover:underline"
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </span>
-        </p>
+        </div>
       </div>
     </div>
   );

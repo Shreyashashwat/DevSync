@@ -1,168 +1,204 @@
-/* === IMPORT FONTS (Modern Professional) === */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@500;700&display=swap');
+/* === HOLOGRAPHIC HOME THEME === */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@500;700;900&display=swap');
 
-/* === PROFESSIONAL GRID THEME === */
-:root {
-  --accent-blue: #2b77ff;
-  --accent-yellow: #f4d000;
-  --accent-pink: #e755af;
-
-  --bg-dark: #0b0d10;
-  --bg-light: #1a1d21;
-
-  --radius: 12px;
-  --neon-soft: 0 0 22px rgba(43, 119, 255, 0.35);
-}
-
-html, body, #root {
-  margin: 0;
-  padding: 0;
-  background: var(--bg-dark);
-  color: white;
-  font-family: "Inter", sans-serif;
-}
-
-/* === MODERN BACKGROUND WITH GLASS EFFECT === */
+/* === MAIN BACKGROUND & GRID === */
 .home-container {
   position: relative;
   min-height: 100vh;
-
-  background: 
-      linear-gradient(
-        rgba(0, 0, 0, 0.65), 
-        rgba(0, 0, 0, 0.85)
-      ),
-      url("../assets/powerranger-bg.jpg");
-  
-  background-size: cover;
-  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  /* Power Rangers Grid BG */
+  background: linear-gradient(rgba(2, 11, 28, 0.6), rgba(2, 11, 28, 0.5)), url("../assets/power-rangers-bg.jpg");
+  background-size: cover;
+  background-position: center 30%;
+  /* Shifted up slightly to center the rangers */
+  background-attachment: fixed;
 }
 
-/* SUBTLE TECH GRID LINES */
+/* CYBER GRID OVERLAY */
 .home-container::before {
   content: "";
   position: absolute;
   inset: 0;
   background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255,255,255,0.06) 0,
-      rgba(255,255,255,0.06) 1px,
-      transparent 1px,
-      transparent 35px
-    );
-  opacity: 0.15;
+    linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 95%);
+  pointer-events: none;
+  z-index: 1;
+  transform: perspective(1000px) rotateX(15deg) scale(1.1);
 }
-
-/* LIGHT ENERGY GLOWS */
 
 .overlay {
- 
-  z-index: 1;
+  display: none;
 }
 
-.decor-yellow {
+/* AMBIENT GLOW */
+.home-container::after {
+  content: "";
   position: absolute;
-  width: 380px;
-  height: 380px;
-  background: var(--accent-yellow);
-  border-radius: 50%;
-  filter: blur(150px);
-  opacity: 0.20;
-  bottom: -100px;
-  z-index: 2;
-  right: -140px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(0, 243, 255, 0.05) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
 }
 
-
+/* === CONTENT CARD === */
 .content {
   position: relative;
   z-index: 10;
   text-align: center;
   max-width: 900px;
-  padding: 2rem;
+  padding: 4rem 3rem;
+
+  /* Glassmorphism */
+  background: rgba(2, 11, 28, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  box-shadow:
+    0 0 30px rgba(0, 0, 0, 0.5),
+    inset 0 0 20px rgba(0, 243, 255, 0.05);
+
+  border-radius: 24px;
+  animation: hologramEntry 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* === PROFESSIONAL TITLE === */
+/* Holographic Bloom on borders */
+.content::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 24px;
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(0, 243, 255, 0.6), transparent 50%, rgba(0, 243, 255, 0.6));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+@keyframes hologramEntry {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(30px);
+    filter: blur(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* === HEADLINE === */
 .title {
   font-family: "Orbitron", sans-serif;
-  font-size: 3.8rem;
-  font-weight: 700;
-
+  font-size: 3.5rem;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 4px;
+  margin-bottom: 3rem;
 
-  background: linear-gradient(to right, var(--accent-yellow), white);
+  color: white;
+  text-shadow:
+    0 0 10px rgba(0, 243, 255, 0.6),
+    0 0 20px rgba(0, 243, 255, 0.4),
+    0 0 40px rgba(0, 102, 255, 0.4);
+
+  background: linear-gradient(to bottom, #ffffff, #c2f9ff);
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
 
-  text-shadow: 0 0 50px rgba(255,255,255,0.15);
-  margin-bottom: 2.2rem;
+  position: relative;
+  display: inline-block;
 }
 
-/* === CTA BUTTONS === */
+/* === BUTTONS === */
 .buttons {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
-  margin-top: 2.2rem;
+  gap: 2rem;
+  margin-top: 2rem;
 }
 
-/* MODERN BUTTON BASE */
 .btn {
-  padding: 1rem 3.2rem;
-  font-size: 1.2rem;
-  font-weight: 600;
+  padding: 1rem 3rem;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
   text-decoration: none;
-  border-radius: var(--radius);
-  transition: 0.25s ease;
-  border: 1px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
 }
 
-/* LOGIN */
+/* LOGIN BTN - Hollow Neon */
 .login-btn {
-  background: var(--accent-blue);
-  color: white;
-  box-shadow: var(--neon-soft);
+  background: rgba(0, 15, 30, 0.2);
+  border: 1px solid #00f3ff;
+  color: #00f3ff;
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
 }
 
 .login-btn:hover {
-  background: transparent;
-  border-color: var(--accent-blue);
-  color: var(--accent-blue);
+  background: rgba(0, 243, 255, 0.1);
+  box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
+  transform: translateY(-3px);
+  text-shadow: 0 0 5px white;
 }
 
-/* REGISTER */
+/* REGISTER BTN - Filled/Lighter */
 .register-btn {
-  background: var(--accent-pink);
-  color: white;
-  box-shadow: 0 0 20px rgba(231, 85, 175, 0.3);
-  padding: auto;
+  background: rgba(0, 102, 255, 0.1);
+  border: 1px solid #0066ff;
+  color: #4db8ff;
 }
 
 .register-btn:hover {
-  background: transparent;
-  border-color: var(--accent-pink);
-  color: var(--accent-pink);
+  background: rgba(0, 102, 255, 0.2);
+  box-shadow: 0 0 25px rgba(0, 102, 255, 0.4);
+  transform: translateY(-3px);
+  color: white;
 }
 
-/* RESPONSIVE */
+/* === RESPONSIVE === */
 @media (max-width: 768px) {
   .title {
-    font-size: 2.7rem;
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+  }
+
+  .content {
+    width: 90%;
+    padding: 3rem 1.5rem;
   }
 
   .buttons {
     flex-direction: column;
-    gap: 1.3rem;
+    gap: 1.5rem;
   }
 
   .btn {
     width: 100%;
-    font-size: 1.15rem;
   }
 }

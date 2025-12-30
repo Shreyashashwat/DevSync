@@ -53,109 +53,84 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
+    <div className="grid-bg min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
 
-      {/* GRID OVERLAY */}
-      <div
-        className="absolute inset-0 opacity-[0.18] pointer-events-none"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 38px)",
-        }}
-      ></div>
+      {/* AMBIENT ORBS */}
+      <div className="absolute w-[500px] h-[500px] bg-blue-600/20 blur-[120px] top-[-100px] left-[-150px] pointer-events-none mix-blend-screen animate-pulse"></div>
+      <div className="absolute w-[500px] h-[500px] bg-cyan-400/10 blur-[120px] bottom-[-100px] right-[-150px] pointer-events-none mix-blend-screen animate-pulse"></div>
 
-      {/* BACKGROUND IMAGE + DARK OVERLAY */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)), url("/src/assets/powerranger-bg.jpg")`,
-        }}
-      ></div>
+      {/* ANIMATION WRAPPER */}
+      <div className="w-full max-w-md animate-fade-in-up relative z-10">
 
-      {/* BLUE GLOW */}
-      <div className="absolute w-[350px] h-[350px] bg-blue-500 blur-[130px] opacity-25 top-[-80px] left-[-130px]"></div>
+        {/* FLOATING CARD */}
+        <div className="glass-panel p-10 animate-float border border-cyan-500/30">
 
-      {/* YELLOW GLOW */}
-      <div className="absolute w-[400px] h-[400px] bg-yellow-400 blur-[150px] opacity-25 bottom-[-100px] right-[-150px]"></div>
+          {/* TITLE */}
+          <h2 className="neon-text text-3xl font-bold text-center mb-8 tracking-wider">
+            Welcome Back
+          </h2>
 
-      {/* LOGIN CARD */}
-      <div className="relative z-10 w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl px-10 py-10">
+          <form onSubmit={handleSubmit} className="space-y-6">
 
-        {/* TITLE */}
-        <h2
-          className="text-3xl font-bold text-center mb-8 tracking-wide"
-          style={{
-            fontFamily: "Orbitron",
-            background: "linear-gradient(to right, #f4d000, white)",
-            WebkitBackgroundClip: "text",
-            color: "transparent",
-          }}
-        >
-          Welcome Back
-        </h2>
+            {/* IDENTIFIER */}
+            <div className="group">
+              <label className="block mb-2 text-cyan-50 font-bold font-orbitron text-xs tracking-widest uppercase shadow-black drop-shadow-md">
+                Email or Username
+              </label>
+              <input
+                type="text"
+                name="identifier"
+                placeholder="Enter email or username"
+                onChange={handleChange}
+                required
+                className="neon-input w-full p-4 rounded-lg bg-black/40 text-white font-semibold placeholder-cyan-200/60 focus:bg-cyan-900/20 border-cyan-500/50"
+              />
+            </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+            {/* PASSWORD */}
+            <div className="group">
+              <label className="block mb-2 text-cyan-50 font-bold font-orbitron text-xs tracking-widest uppercase shadow-black drop-shadow-md">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                onChange={handleChange}
+                required
+                minLength={6}
+                className="neon-input w-full p-4 rounded-lg bg-black/40 text-white font-semibold placeholder-cyan-200/60 focus:bg-cyan-900/20 border-cyan-500/50"
+              />
+            </div>
 
-          {/* IDENTIFIER */}
-          <div>
-            <label className="block mb-1 text-white/80 font-semibold text-sm">
-              Email or Username
-            </label>
-            <input
-              type="text"
-              name="identifier"
-              placeholder="Enter email or username"
-              onChange={handleChange}
-              required
-              className="w-full p-3 rounded-lg bg-white/20 text-white placeholder-white/60 
-              border border-white/30 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 
-              outline-none transition"
-            />
+            {/* ERROR MESSAGE */}
+            {error && (
+              <div className="p-3 rounded border border-red-500/30 bg-red-500/10 text-red-200 text-sm text-center font-bold tracking-wide shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                ⚠ {error}
+              </div>
+            )}
+
+            {/* LOGIN BUTTON */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="neon-btn w-full py-4 rounded-lg font-bold text-lg bg-gradient-to-r from-blue-600/20 to-cyan-400/20 hover:from-blue-600/40 hover:to-cyan-400/40 border border-cyan-400/50"
+            >
+              {isLoading ? "Logging in..." : "Login"}
+            </button>
+          </form>
+
+          {/* REGISTER LINK */}
+          <div className="mt-8 text-center">
+            <p className="text-cyan-200/50 text-xs tracking-widest uppercase mb-2">Don’t have an account?</p>
+            <span
+              onClick={() => navigate("/register")}
+              className="link-cyan cursor-pointer font-bold text-sm tracking-widest uppercase pb-1 border-b border-transparent hover:border-cyan-400"
+            >
+              Register
+            </span>
           </div>
-
-          {/* PASSWORD */}
-          <div>
-            <label className="block mb-1 text-white/80 font-semibold text-sm">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter password"
-              onChange={handleChange}
-              required
-              minLength={6}
-              className="w-full p-3 rounded-lg bg-white/20 text-white placeholder-white/60 
-              border border-white/30 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40 
-              outline-none transition"
-            />
-          </div>
-
-          {/* ERROR MESSAGE */}
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-
-          {/* LOGIN BUTTON */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-500 
-            font-semibold text-white shadow-lg shadow-blue-500/40 transition border border-transparent 
-            hover:border-blue-400"
-          >
-            {isLoading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-
-        {/* REGISTER LINK */}
-        <p className="text-center text-white/70 mt-6 text-sm">
-          Don’t have an account?{" "}
-          <span
-            onClick={() => navigate("/register")}
-            className="text-yellow-400 cursor-pointer font-semibold hover:underline"
-          >
-            Register
-          </span>
-        </p>
+        </div>
       </div>
     </div>
   );

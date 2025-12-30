@@ -61,14 +61,14 @@ function NotificationHandler() {
 }
 
 /* ===============================
-   🎨 UI Constants
+   🎨 UI Constants (Updated for Sci-Fi Theme)
 ================================ */
-const COLORS = {
+const THEME = {
+  cyan: "#00f3ff",
+  blue: "#0066ff",
   red: "#D4181F",
-  blue: "#2B4CB3",
-  yellow: "#F4D000",
-  black: "#0A0A0A",
   white: "#FFFFFF",
+  glassBorder: "rgba(0, 243, 255, 0.3)",
 };
 
 export function AuthButtons() {
@@ -81,48 +81,68 @@ export function AuthButtons() {
   };
 
   const baseBtn = {
-    padding: "8px 18px",
-    borderRadius: "999px",
+    padding: "8px 24px",
+    borderRadius: "4px", // More angular for sci-fi feel
     fontWeight: 600,
     textDecoration: "none",
-    backdropFilter: "blur(12px)",
-    border: "1px solid rgba(255,255,255,0.25)",
+    backdropFilter: "blur(4px)",
     transition: "all 0.3s ease",
     cursor: "pointer",
+    fontFamily: '"Orbitron", sans-serif', // Use theme font
+    letterSpacing: "1px",
+    textTransform: "uppercase",
+    fontSize: "0.9rem",
   };
 
   return (
-    <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+    <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
       {!token ? (
         <>
-          {/* Register */}
+          {/* Register - Cyan Theme */}
           <Link
             to="/register"
             style={{
               ...baseBtn,
-              background: "rgba(244,208,0,0.15)",
-              color: COLORS.yellow,
+              background: "rgba(0, 243, 255, 0.1)",
+              border: `1px solid ${THEME.cyan}`,
+              color: THEME.cyan,
+              boxShadow: "0 0 10px rgba(0, 243, 255, 0.1)",
             }}
-            onMouseEnter={(e) =>
-              (e.target.style.boxShadow = "0 0 12px rgba(244,208,0,0.8)")
-            }
-            onMouseLeave={(e) => (e.target.style.boxShadow = "none")}
+            onMouseEnter={(e) => {
+              e.target.style.background = "rgba(0, 243, 255, 0.2)";
+              e.target.style.boxShadow = "0 0 20px rgba(0, 243, 255, 0.4)";
+              e.target.style.transform = "translateY(-2px)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = "rgba(0, 243, 255, 0.1)";
+              e.target.style.boxShadow = "0 0 10px rgba(0, 243, 255, 0.1)";
+              e.target.style.transform = "translateY(0)";
+            }}
           >
             Register
           </Link>
 
-          {/* Login */}
+          {/* Login - Blue Theme */}
           <Link
             to="/login"
             style={{
               ...baseBtn,
-              background: "rgba(43,76,179,0.2)",
-              color: COLORS.white,
+              background: "rgba(0, 102, 255, 0.1)",
+              border: `1px solid ${THEME.blue}`,
+              color: "#4db8ff",
             }}
-            onMouseEnter={(e) =>
-              (e.target.style.boxShadow = "0 0 12px rgba(43,76,179,0.9)")
-            }
-            onMouseLeave={(e) => (e.target.style.boxShadow = "none")}
+            onMouseEnter={(e) => {
+              e.target.style.background = "rgba(0, 102, 255, 0.25)";
+              e.target.style.boxShadow = "0 0 20px rgba(0, 102, 255, 0.5)";
+              e.target.style.color = "white";
+              e.target.style.transform = "translateY(-2px)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = "rgba(0, 102, 255, 0.1)";
+              e.target.style.boxShadow = "none";
+              e.target.style.color = "#4db8ff";
+              e.target.style.transform = "translateY(0)";
+            }}
           >
             Login
           </Link>
@@ -133,13 +153,18 @@ export function AuthButtons() {
           onClick={handleLogout}
           style={{
             ...baseBtn,
-            background: "rgba(212,24,31,0.25)",
-            color: COLORS.white,
+            background: "rgba(212,24,31,0.15)",
+            border: "1px solid rgba(212,24,31,0.5)",
+            color: "#ff4d4d",
           }}
-          onMouseEnter={(e) =>
-            (e.target.style.boxShadow = "0 0 14px rgba(212,24,31,0.9)")
-          }
-          onMouseLeave={(e) => (e.target.style.boxShadow = "none")}
+          onMouseEnter={(e) => {
+            e.target.style.boxShadow = "0 0 15px rgba(212,24,31,0.6)";
+            e.target.style.background = "rgba(212,24,31,0.25)";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.boxShadow = "none";
+            e.target.style.background = "rgba(212,24,31,0.15)";
+          }}
         >
           Logout
         </button>
@@ -156,13 +181,15 @@ function Navbar() {
         position: "fixed",
         top: 0,
         width: "100%",
-        height: "72px",
+        height: "80px",
         display: "flex",
-        justifyContent: "flex-end",
+        justifyContent: "flex-end", // Align buttons to the right
         alignItems: "center",
-        padding: "0 24px",
-        backdropFilter: "blur(10px)",
-        borderBottom: `2px solid ${COLORS.yellow}`,
+        padding: "0 40px",
+        background: "rgba(2, 11, 28, 0.6)", // Darker semi-transparent bg
+        backdropFilter: "blur(12px)",
+        borderBottom: `1px solid ${THEME.glassBorder}`,
+        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.3)",
         zIndex: 999,
       }}
     >
@@ -172,22 +199,25 @@ function Navbar() {
           position: "absolute",
           left: "50%",
           transform: "translateX(-50%)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <img
           src={logo}
           alt="Logo"
           style={{
-            height: "70px",
-            width:"800px",
+            height: "80px", // Slightly larger
+            width: "auto",
             objectFit: "contain",
-            filter: "drop-shadow(0 0 4px rgba(255,255,255,0.6))",
+            filter: "drop-shadow(0 0 8px rgba(0, 243, 255, 0.3))", // Cyan glow
           }}
         />
       </div>
-      <AuthButtons/>
+      <AuthButtons />
 
-   
+
     </nav>
   );
 }
@@ -228,31 +258,31 @@ export default function App() {
             }
           />
 
-        <Route
-          path="/dashboard/admin"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/staff"
-          element={
-            <ProtectedRoute allowedRoles={["staff", "officer"]}>
-              <StaffDashboard />
-            </ProtectedRoute>
-          }
-        />
-         <Route
-          path="/dashboard/admin/staff-performance"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/dashboard/admin"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/staff"
+            element={
+              <ProtectedRoute allowedRoles={["staff", "officer"]}>
+                <StaffDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/admin/staff-performance"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+              </ProtectedRoute>
+            }
+          />
 
-          
+
 
           <Route
             path="/complaint/new"
