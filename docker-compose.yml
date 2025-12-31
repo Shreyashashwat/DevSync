@@ -10,8 +10,11 @@ services:
       - ragbot
       - redis
       - ai-category
+      
      
     restart: always
+
+ 
 
   ragbot:
     build: ./backend/src/chatbot
@@ -24,6 +27,15 @@ services:
     env_file:
       - backend/.env
     restart: always
+    
+  frontend:
+    build: ./frontend-app
+    ports: 
+      - "3000:80" 
+    env_file:
+      - ./frontend-app/.env
+    depends_on: 
+      - backend
 
   ai-category:
     build: ./backend/src/AI-category
@@ -33,6 +45,7 @@ services:
     env_file:
       - backend/.env
     restart: always
+  
 
   redis:
     image: redis:7-alpine
