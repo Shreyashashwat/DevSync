@@ -28,12 +28,12 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [staffList2, setStaffList2] = useState([]);
   //******************* */
-const toggleComments = (id) => {
-  setOpenComments((prev) => ({
-    ...prev,
-    [id]: !prev[id],
-  }));
-};
+  const toggleComments = (id) => {
+    setOpenComments((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   const toggleComplaint = (id) => {
     setSelectedComplaints((prev) =>
@@ -231,18 +231,18 @@ const toggleComments = (id) => {
     );
 
   return (
-    <div className="flex min-h-screen bg-[#0B0D10] text-white relative font-inter overflow-hidden">
+    <div className="flex min-h-screen bg-[#020b1c] text-white relative font-inter overflow-hidden">
 
 
-      <div className="absolute inset-0 opacity-[0.5] pointer-events-none bg-[url('./assets/download.jpg')]  bg-top blur-l "></div>
+      <div className="absolute inset-0 opacity-[0.4] pointer-events-none bg-[url('./assets/download.jpg')] bg-top blur-sm mix-blend-overlay"></div>
 
       {/* NEON GLOWS */}
-      <div className="absolute w-[380px] h-[380px] bg-blue-500 blur-[150px] opacity-30 top-[-100px] left-[-100px]"></div>
-      <div className="absolute w-[400px] h-[400px] bg-yellow-400 blur-[150px] opacity-25 bottom-[-120px] right-[-150px]"></div>
+      <div className="absolute w-[500px] h-[500px] bg-blue-600 blur-[150px] opacity-20 top-[-100px] left-[-100px]"></div>
+      <div className="absolute w-[500px] h-[500px] bg-cyan-400 blur-[150px] opacity-20 bottom-[-120px] right-[-150px]"></div>
 
       {/* SIDEBAR */}
-      <aside className="w-64 bg-white/5 backdrop-blur-xl border-r border-white/10 p-6 z-20">
-        <h1 className="font-orbitron text-2xl text-yellow-400 text-center tracking-wider mt-20">
+      <aside className="w-64 bg-[#020b1c]/80 backdrop-blur-xl border-r border-cyan-500/30 p-6 z-20 shadow-[5px_0_30px_rgba(0,243,255,0.1)]">
+        <h1 className="font-orbitron text-2xl text-cyan-400 text-center tracking-wider mt-20 drop-shadow-[0_0_10px_rgba(0,243,255,0.5)]">
           Admin Panel
         </h1>
 
@@ -251,39 +251,39 @@ const toggleComments = (id) => {
         <div className="mt-6 space-y-3">
           <button
             onClick={() => setActiveView("dashboard")}
-            className={`w-full rounded-lg px-4 py-2 text-left transition
+            className={`w-full rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
       ${activeView === "dashboard"
-                ? "bg-blue-500/30 border border-blue-400"
-                : "bg-white/10 hover:bg-white/20"}`}
+                ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
+                : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"}`}
           >
             Dashboard
           </button>
 
           <button
             onClick={() => setActiveView("complaints")}
-            className={`w-full rounded-lg px-4 py-2 text-left transition
+            className={`w-full rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
       ${activeView === "complaints"
-                ? "bg-blue-500/30 border border-blue-400"
-                : "bg-white/10 hover:bg-white/20"}`}
+                ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
+                : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"}`}
           >
             Complaints
           </button>
 
           <button
             onClick={() => setActiveView("users")}
-            className={`w-full rounded-lg px-4 py-2 text-left transition
+            className={`w-full rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
       ${activeView === "users"
-                ? "bg-blue-500/30 border border-blue-400"
-                : "bg-white/10 hover:bg-white/20"}`}
+                ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
+                : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"}`}
           >
             Create User
           </button>
           <button
             onClick={() => setActiveView("staff-performance")}
-            className={`w-full rounded-lg px-4 py-2 text-left transition
+            className={`w-full rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
       ${activeView === "staff-performance"
-                ? "bg-blue-500/30 border border-blue-400"
-                : "bg-white/10 hover:bg-white/20"} mb-4`}
+                ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
+                : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"} mb-4`}
           >
             Staff
           </button>
@@ -297,10 +297,10 @@ const toggleComments = (id) => {
 
         </div>
 
-        <button onClick={() => setActiveView("bulk")} className={`w-full rounded-lg px-4 py-2 text-left transition
+        <button onClick={() => setActiveView("bulk")} className={`w-full rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
       ${activeView === "bulk"
-            ? "bg-blue-500/30 border border-blue-400"
-            : "bg-white/10 hover:bg-white/20"}`}>Bulk Upload</button>
+            ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
+            : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"}`}>Bulk Upload</button>
 
 
       </aside>
@@ -321,10 +321,10 @@ const toggleComments = (id) => {
                 <StatCard label="SLA Violations" value={stats.slaViolations} color="#FF0000" />
               </div>
             )}
-            
+
             {/* ASSIGN COMPLAINT CARD */}
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 mt-10 shadow-2xl rounded-2xl p-6 mb-10">
-              <h2 className="font-orbitron text-xl mb-4 text-yellow-400">Assign Complaints</h2>
+            <div className="glass-panel p-6 mb-10 border border-cyan-500/30 shadow-[0_0_20px_rgba(0,243,255,0.1)] rounded-2xl">
+              <h2 className="font-orbitron text-xl mb-4 text-cyan-400 drop-shadow-md">Assign Complaints</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* <select
@@ -377,13 +377,13 @@ const toggleComments = (id) => {
 
                 <button
                   onClick={handleAssign}
-                  className="bg-yellow-400 text-black font-bold rounded-lg px-6 py-3 shadow-lg hover:bg-yellow-300 transition"
+                  className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold rounded-lg px-6 py-3 shadow-[0_0_15px_rgba(0,243,255,0.4)] transition transform hover:scale-105"
                 >
                   Assign
                 </button>
               </div>
             </div>
-            
+
             {/* Complaints Chart */}
             <div className="mb-10">
               <ComplaintsChart complaints={complaints} />
@@ -412,13 +412,13 @@ const toggleComments = (id) => {
 
               <button
                 onClick={handleBulkAssign}
-                className="bg-yellow-400 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-300"
+                className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-6 py-3 rounded-lg font-bold hover:shadow-[0_0_15px_rgba(0,243,255,0.4)] transition"
               >
                 Assign Selected ({selectedComplaints.length})
               </button>
             </div>
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-6">
-              <h2 className="font-orbitron text-xl mb-4 text-yellow-400">
+            <div className="glass-panel border border-cyan-500/30 shadow-2xl rounded-2xl p-6">
+              <h2 className="font-orbitron text-xl mb-4 text-cyan-400 drop-shadow-md">
                 All Complaints
               </h2>
 
@@ -448,60 +448,60 @@ const toggleComments = (id) => {
                   </thead>
 
                   <tbody>
-  {complaints.map((c) => (
-    <React.Fragment key={c._id}>
-      {/* MAIN COMPLAINT ROW */}
-      <tr className="bg-white/10 border-b border-white/20 hover:bg-white/20 transition">
-        <td className="p-3">
-          <input
-            type="checkbox"
-            checked={selectedComplaints.includes(c._id)}
-            onChange={() => toggleComplaint(c._id)}
-          />
-        </td>
+                    {complaints.map((c) => (
+                      <React.Fragment key={c._id}>
+                        {/* MAIN COMPLAINT ROW */}
+                        <tr className="bg-white/10 border-b border-white/20 hover:bg-white/20 transition">
+                          <td className="p-3">
+                            <input
+                              type="checkbox"
+                              checked={selectedComplaints.includes(c._id)}
+                              onChange={() => toggleComplaint(c._id)}
+                            />
+                          </td>
 
-        <td className="p-3">{c.title}</td>
-        <td className="p-3">{c.status}</td>
-        <td className="p-3">
-          {c.assigned_to?.username || "Unassigned"}
-        </td>
-        <td className="p-3">{c.category}</td>
+                          <td className="p-3">{c.title}</td>
+                          <td className="p-3">{c.status}</td>
+                          <td className="p-3">
+                            {c.assigned_to?.username || "Unassigned"}
+                          </td>
+                          <td className="p-3">{c.category}</td>
 
-        <td
-          className="p-3 font-semibold"
-          style={{
-            color: timeLefts[c._id]?.total > 0 ? "#FFD700" : "#FF4C4C",
-          }}
-        >
-          {timeLefts[c._id]?.total > 0
-            ? `${timeLefts[c._id].days}d ${timeLefts[c._id].hours}h ${timeLefts[c._id].minutes}m ${timeLefts[c._id].seconds}s`
-            : "Deadline passed"}
-        </td>
+                          <td
+                            className="p-3 font-semibold"
+                            style={{
+                              color: timeLefts[c._id]?.total > 0 ? "#FFD700" : "#FF4C4C",
+                            }}
+                          >
+                            {timeLefts[c._id]?.total > 0
+                              ? `${timeLefts[c._id].days}d ${timeLefts[c._id].hours}h ${timeLefts[c._id].minutes}m ${timeLefts[c._id].seconds}s`
+                              : "Deadline passed"}
+                          </td>
 
-        {/* COMMENT BUTTON */}
-        <td className="p-3">
-          <button
-            onClick={() => toggleComments(c._id)}
-            className="px-3 py-1 text-sm rounded-lg border border-blue-400/50 text-blue-300 hover:bg-blue-500/20 transition"
-          >
-            💬
-          </button>
-        </td>
-      </tr>
+                          {/* COMMENT BUTTON */}
+                          <td className="p-3">
+                            <button
+                              onClick={() => toggleComments(c._id)}
+                              className="px-3 py-1 text-sm rounded-lg border border-blue-400/50 text-blue-300 hover:bg-blue-500/20 transition"
+                            >
+                              💬
+                            </button>
+                          </td>
+                        </tr>
 
-      {/* COMMENT SECTION ROW */}
-      {openComments[c._id] && (
-        <tr className="bg-black/40">
-          <td colSpan={7} className="p-4">
-            <div className="border-t border-blue-500/30 pt-3">
-              <CommentSection complaintId={c._id} />
-            </div>
-          </td>
-        </tr>
-      )}
-    </React.Fragment>
-  ))}
-</tbody>
+                        {/* COMMENT SECTION ROW */}
+                        {openComments[c._id] && (
+                          <tr className="bg-black/40">
+                            <td colSpan={7} className="p-4">
+                              <div className="border-t border-blue-500/30 pt-3">
+                                <CommentSection complaintId={c._id} />
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
 
 
                 </table>
@@ -519,7 +519,7 @@ const toggleComments = (id) => {
               {/* HEADER */}
               <div className="flex justify-between items-center mb-10">
                 <div>
-                  <h1 className="font-orbitron text-3xl text-yellow-400">
+                  <h1 className="font-orbitron text-3xl text-cyan-400 drop-shadow-md">
                     Staff Performance
                   </h1>
                   <p className="text-white/60 text-sm">
@@ -573,7 +573,7 @@ const toggleComments = (id) => {
 
                       {/* LEFT */}
                       <div>
-                        <h3 className="text-xl text-yellow-400">{staff.username}</h3>
+                        <h3 className="text-xl text-cyan-300 font-bold">{staff.username}</h3>
                         <p className="text-white/60">{staff.email}</p>
 
                         <div className="flex items-center gap-3 mt-2">
@@ -601,7 +601,7 @@ const toggleComments = (id) => {
                                         staff.totalRatings) *
                                       100 + "%",
                                   }}
-                                  className="h-full bg-yellow-400 rounded"
+                                  className="h-full bg-cyan-400 rounded shadow-[0_0_8px_cyan]"
                                 />
                               )}
 
@@ -621,11 +621,11 @@ const toggleComments = (id) => {
       </main>
       <AdminChatbotWidget />
     </div>
-    
-  
-);
+
+
+  );
 };
- 
+
 export default AdminDashboard;
 
 // for SLA timer

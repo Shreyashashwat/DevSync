@@ -136,12 +136,16 @@ export default function StaffDashboard() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-[url('./assets/bg3.jpg')] bg-fixed bg-center bg-cover text-white">
-      <div className="min-h-screen w-full bg-black/65 p-6">
+    <div className="w-full min-h-screen bg-[#020b1c] text-white overflow-hidden relative">
+      <div className="absolute inset-0 opacity-[0.2] bg-[url('./assets/grid.webp')] bg-contain pointer-events-none mix-blend-overlay"></div>
+      <div className="absolute w-[500px] h-[500px] bg-blue-600 blur-[150px] opacity-20 top-[-100px] left-[-100px]"></div>
+      <div className="absolute w-[500px] h-[500px] bg-cyan-400 blur-[150px] opacity-20 bottom-[-100px] right-[-100px]"></div>
+
+      <div className="min-h-screen w-full relative z-10 p-6">
 
         {/* HEADER */}
-        <div className="w-full h-20 bg-[#013657] flex items-center justify-center px-6 border-b border-[#9c93e0] mt-14">
-          <h1 className="text-3xl font-orbitron font-bold text-cyan-300">
+        <div className="w-full h-20 bg-[#020b1c]/80 backdrop-blur-xl flex items-center justify-center px-6 border-b border-cyan-500/30 mt-14 shadow-[0_0_15px_rgba(0,243,255,0.2)] rounded-xl">
+          <h1 className="text-3xl font-orbitron font-bold text-cyan-400 drop-shadow-md">
             Engineer Dashboard
           </h1>
         </div>
@@ -174,17 +178,17 @@ export default function StaffDashboard() {
         {/* STATS */}
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-            <StatCard label="Total Assigned" value={stats.total} color="#7AFF57" />
+            <StatCard label="Total Assigned" value={stats.total} color="#4db8ff" />
             <StatCard label="Open" value={stats.open} color="#FFD93C" />
-            <StatCard label="In Progress" value={stats.inProgress} color="#00CFFF" />
+            <StatCard label="In Progress" value={stats.inProgress} color="#00f3ff" />
             <StatCard label="Resolved" value={stats.resolved} color="#4CAF50" />
             <StatCard label="Closed" value={stats.closed} color="#9CA3AF" />
             <StatCard label="SLA Breaches" value={stats.slaViolations} color="#FF4444" />
           </div>
         )}
 
-        {/* FILTER BAR (UNCHANGED) */}
-        <div className="flex flex-wrap gap-4 mb-6 bg-[#003A20]/20 p-4 rounded-xl border border-cyan-500/30">
+        {/* FILTER BAR */}
+        <div className="flex flex-wrap gap-4 mb-6 bg-cyan-900/10 p-4 rounded-xl border border-cyan-500/30 backdrop-blur-md">
           <input
             type="text"
             placeholder="Search by title..."
@@ -230,7 +234,7 @@ export default function StaffDashboard() {
             return (
               <div
                 key={c._id}
-                className="bg-white/5 backdrop-blur-lg border border-white/15 rounded-xl p-5 transition-all"
+                className="glass-panel p-5 transition-all border border-cyan-500/30 shadow-[0_0_15px_rgba(0,243,255,0.05)] hover:shadow-[0_0_25px_rgba(0,243,255,0.15)] rounded-xl"
               >
                 {/* TITLE + COMMENT BUTTON */}
                 <div className="flex justify-between items-center mb-2">
@@ -272,10 +276,10 @@ export default function StaffDashboard() {
                   </p>
                 )}
                 {c.photo_url && (
-  <img
-    src={c.photo_url}
-    alt="Complaint upload"
-    className="
+                  <img
+                    src={c.photo_url}
+                    alt="Complaint upload"
+                    className="
       mt-4
       w-full
       max-h-80
@@ -284,8 +288,8 @@ export default function StaffDashboard() {
       border border-cyan-400/40
       bg-black/40
     "
-  />
-)}
+                  />
+                )}
 
 
                 {/* UPDATE STATUS */}
@@ -306,7 +310,7 @@ export default function StaffDashboard() {
                     <span className="ml-3 text-cyan-400 animate-pulse">Updating...</span>
                   )}
                 </div>
-                
+
 
                 {/* COMMENTS */}
                 {openComments[c._id] && (

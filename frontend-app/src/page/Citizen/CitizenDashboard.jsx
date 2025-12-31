@@ -11,7 +11,7 @@ export default function CitizenDashboard() {
   const [username, setUsername] = useState("");
   const [stats, setStats] = useState(null);
   const [complaints, setComplaints] = useState([]);
-const [editComplaint, setEditComplaint] = useState(null);
+  const [editComplaint, setEditComplaint] = useState(null);
 
   const navigate = useNavigate();
 
@@ -23,8 +23,8 @@ const [editComplaint, setEditComplaint] = useState(null);
       try {
         const res = await axiosInstance.get("/api/dashboard/citizen");
         setUsername(res.data.msg.replace("Welcome citizen ", ""));
-            const statsRes = await axiosInstance.get("/api/users/dashboard/stats");
-    setStats(statsRes.data);
+        const statsRes = await axiosInstance.get("/api/users/dashboard/stats");
+        setStats(statsRes.data);
         setLoading(false);
       } catch {
         navigate("/login");
@@ -44,20 +44,19 @@ const [editComplaint, setEditComplaint] = useState(null);
   return (
     <div className="flex min-h-screen text-white font-inter relative overflow-hidden">
 
-      <div className="absolute inset-0 bg-gradient-to-br from-[#00160D] via-[#003A20] to-[#001008]" />
+      <div className="absolute inset-0 bg-[#020b1c]" />
 
-      <div className="absolute inset-0 opacity-[0.10] bg-[url('./assets/grid.webp')] bg-contain pointer-events-none"></div>
+      <div className="absolute inset-0 opacity-[0.2] bg-[url('./assets/grid.webp')] bg-contain pointer-events-none mix-blend-overlay"></div>
 
-      <div className="absolute w-[380px] h-[380px] bg-[#3CFF8F] blur-[110px] opacity-15 top-[-140px] left-[-120px]" />
-      <div className="absolute w-[320px] h-[320px] bg-[#B4FF5A] blur-[110px] opacity-10 bottom-[-100px] right-[-100px]" />
+      <div className="absolute w-[500px] h-[500px] bg-blue-600 blur-[150px] opacity-20 top-[-140px] left-[-120px]" />
+      <div className="absolute w-[400px] h-[400px] bg-cyan-400 blur-[150px] opacity-20 bottom-[-100px] right-[-100px]" />
 
       {/* SIDEBAR */}
-      <aside className="w-64 z-20 bg-[#00160D]/20 backdrop-blur-xl
-        border-r border-[#3CFF8F]/10 p-6 rounded-r-2xl
-        shadow-[0_0_18px_#3CFF8F]/30">
-        
-        <h2 className="font-orbitron text-3xl font-bold text-[#3CFF8F] tracking-wide mt-13  mb-10
-          ">
+      <aside className="w-64 z-20 bg-[#020b1c]/80 backdrop-blur-xl
+        border-r border-cyan-500/30 p-6 rounded-r-2xl
+        shadow-[5px_0_30px_rgba(0,243,255,0.1)]">
+
+        <h2 className="font-orbitron text-2xl font-bold text-cyan-400 tracking-wide mt-13 mb-10 drop-shadow-[0_0_10px_rgba(0,243,255,0.5)]">
           Dashboard
         </h2>
 
@@ -66,10 +65,9 @@ const [editComplaint, setEditComplaint] = useState(null);
           {/* My Complaints */}
           <button
             className={`w-full px-5 py-3 text-left rounded-lg transition font-semibold tracking-wide
-              ${
-                activeMenu === "lifecycle"
-                  ? "bg-[#3CFF8F]/20 border border-[#3CFF8F] shadow-[0_0_12px_#3CFF8F]/30"
-                  : "bg-white/5 hover:bg-white/10"
+              ${activeMenu === "lifecycle"
+                ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
+                : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
               }`}
             onClick={() => setActiveMenu("lifecycle")}
           >
@@ -79,10 +77,9 @@ const [editComplaint, setEditComplaint] = useState(null);
           {/* Submit Complaint */}
           <button
             className={`w-full px-5 py-3 text-left rounded-lg transition font-semibold tracking-wide
-              ${
-                activeMenu === "complaint-form"
-                  ? "bg-[#7CFFD8]/20 border border-[#7CFFD8] shadow-[0_0_12px_#7CFFD8]/30"
-                  : "bg-white/5 hover:bg-white/10"
+              ${activeMenu === "complaint-form"
+                ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
+                : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
               }`}
             onClick={() => setActiveMenu("complaint-form")}
           >
@@ -96,86 +93,65 @@ const [editComplaint, setEditComplaint] = useState(null);
 
         {/* Submit Complaint Panel */}
         {activeMenu === "complaint-form" && (
-          <div className="bg-[#00160D]/40 border border-[#7CFFD8]/25 rounded-xl
-            shadow-[0_0_18px_#7CFFD8]/10  p-8 mt-10" >
+          <div className="glass-panel p-8 mt-10 border border-cyan-500/30 shadow-[0_0_20px_rgba(0,243,255,0.1)] rounded-xl" >
             <ComplaintForm neon />
           </div>
         )}
 
         {activeMenu === "lifecycle" && (
           <div
-  className="
-    bg-[#3CFF8F]/
-    
-    rounded-[2.75rem]
-    border border-[#3CFF8F]/20
-    ring-1 ring-white/5
-    shadow-[0_0_18px_#3CFF8F1a]
-    p-12
-    mt-10
-  "
->
+            className="glass-panel p-8 mt-10 border border-cyan-500/30 shadow-[0_0_20px_rgba(0,243,255,0.1)] rounded-2xl"
+          >
 
-
-            
-            <h2 className="font-orbitron text-3xl text-[#3CFF8F] mb-4
-              ">
+            <h2 className="font-orbitron text-3xl text-cyan-400 mb-4 drop-shadow-md">
               Welcome, {username}! ⚡
             </h2>
-       {stats && (
-  <div
-    className="
-      bg-green/10
-      backdrop-blur-xl
-      border border-white/20
-      rounded-2xl
-      p-8
-      mb-12
-      shadow-2xl
-    "
-  >
-    {/* SECTION TITLE */}
-    <div className="mb-6">
-      <h3 className="font-orbitron text-xl text-[#7CFFD8] tracking-wide">
-        Complaint Analytics
-      </h3>
-      <div className="h-[2px] w-40 bg-gradient-to-r from-[#3CFF8F] to-transparent mt-2" />
-    </div>
+            {stats && (
+              <div
+                className="bg-cyan-900/10 backdrop-blur-xl border border-cyan-500/20 rounded-2xl p-8 mb-12 shadow-inner"
+              >
+                {/* SECTION TITLE */}
+                <div className="mb-6">
+                  <h3 className="font-orbitron text-xl text-cyan-300 tracking-wide">
+                    Complaint Analytics
+                  </h3>
+                  <div className="h-[2px] w-40 bg-gradient-to-r from-cyan-400 to-transparent mt-2" />
+                </div>
 
-    {/* ANALYTICS GRID */}
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 ">
-      <StatCard
-        label="Total Complaints"
-        value={stats.total}
-        color="#3CFF8F"
-      />
+                {/* ANALYTICS GRID */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 ">
+                  <StatCard
+                    label="Total Complaints"
+                    value={stats.total}
+                    color="#00f3ff"
+                  />
 
-      <StatCard
-        label="Open"
-        value={stats.open}
-        color="#FFD93C"
-      />
+                  <StatCard
+                    label="Open"
+                    value={stats.open}
+                    color="#FFD93C"
+                  />
 
-      <StatCard
-        label="In Progress"
-        value={stats.inprogress}
-        color="#00CFFF"
-      />
+                  <StatCard
+                    label="In Progress"
+                    value={stats.inprogress}
+                    color="#00CFFF"
+                  />
 
-      <StatCard
-        label="Resolved"
-        value={stats.resolved}
-        color="#4CAF50"
-      />
+                  <StatCard
+                    label="Resolved"
+                    value={stats.resolved}
+                    color="#4CAF50"
+                  />
 
-      <StatCard
-        label="Last Status"
-        value={stats.lastComplaintStatus || "N/A"}
-        color="#FFAA33"
-      />
-    </div>
-  </div>
-)}
+                  <StatCard
+                    label="Last Status"
+                    value={stats.lastComplaintStatus || "N/A"}
+                    color="#FFAA33"
+                  />
+                </div>
+              </div>
+            )}
 
 
             <ComplaintLifecycle />
