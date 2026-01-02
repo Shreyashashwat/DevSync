@@ -231,7 +231,7 @@ const AdminDashboard = () => {
     );
 
   return (
-    <div className="flex min-h-screen bg-[#020b1c] text-white relative font-inter overflow-hidden">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-[#020b1c] text-white relative font-inter overflow-hidden pt-20">
 
 
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none bg-[url('./assets/download.jpg')] bg-top blur-sm mix-blend-overlay"></div>
@@ -241,17 +241,17 @@ const AdminDashboard = () => {
       <div className="absolute w-[500px] h-[500px] bg-cyan-400 blur-[150px] opacity-20 bottom-[-120px] right-[-150px]"></div>
 
       {/* SIDEBAR */}
-      <aside className="w-64 bg-[#020b1c]/80 backdrop-blur-xl border-r border-cyan-500/30 p-6 z-20 shadow-[5px_0_30px_rgba(0,243,255,0.1)]">
-        <h1 className="font-orbitron text-2xl text-cyan-400 text-center tracking-wider mt-20 drop-shadow-[0_0_10px_rgba(0,243,255,0.5)]">
+      <aside className="w-full lg:w-64 bg-[#020b1c]/80 backdrop-blur-xl border-b lg:border-b-0 lg:border-r border-cyan-500/30 p-6 z-20 shadow-[0_5px_30px_rgba(0,243,255,0.1)] lg:shadow-[5px_0_30px_rgba(0,243,255,0.1)]">
+        <h1 className="font-orbitron text-2xl text-cyan-400 text-center tracking-wider mt-4 lg:mt-20 drop-shadow-[0_0_10px_rgba(0,243,255,0.5)]">
           Admin Panel
         </h1>
 
-        <p className="mt-3 text-center text-white/80">👑 {username}</p>
+        <p className="mt-3 text-center text-white/80 mb-6 lg:mb-0">👑 {username}</p>
 
-        <div className="mt-6 space-y-3">
+        <div className="mt-6 flex lg:block overflow-x-auto space-x-4 lg:space-x-0 lg:space-y-3 pb-2 lg:pb-0">
           <button
             onClick={() => setActiveView("dashboard")}
-            className={`w-full rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
+            className={`w-auto lg:w-full whitespace-nowrap rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
       ${activeView === "dashboard"
                 ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
                 : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"}`}
@@ -261,7 +261,7 @@ const AdminDashboard = () => {
 
           <button
             onClick={() => setActiveView("complaints")}
-            className={`w-full rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
+            className={`w-auto lg:w-full whitespace-nowrap rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
       ${activeView === "complaints"
                 ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
                 : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"}`}
@@ -271,7 +271,7 @@ const AdminDashboard = () => {
 
           <button
             onClick={() => setActiveView("users")}
-            className={`w-full rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
+            className={`w-auto lg:w-full whitespace-nowrap rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
       ${activeView === "users"
                 ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
                 : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"}`}
@@ -280,13 +280,19 @@ const AdminDashboard = () => {
           </button>
           <button
             onClick={() => setActiveView("staff-performance")}
-            className={`w-full rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
+            className={`w-auto lg:w-full whitespace-nowrap rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
       ${activeView === "staff-performance"
                 ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
-                : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"} mb-4`}
+                : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"} lg:mb-4`}
           >
             Staff
           </button>
+
+          <button onClick={() => setActiveView("bulk")} className={`w-auto lg:w-full whitespace-nowrap rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
+        ${activeView === "bulk"
+              ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
+              : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"}`}>Bulk Upload</button>
+
           {/* <button
             onClick={() => navigate("/dashboard/admin/staff-performance")}
             className="w-full bg-white/10 hover:bg-white/20 transition rounded-lg px-4 py-2 text-left"
@@ -297,16 +303,11 @@ const AdminDashboard = () => {
 
         </div>
 
-        <button onClick={() => setActiveView("bulk")} className={`w-full rounded-lg px-4 py-2 text-left transition font-semibold tracking-wide
-      ${activeView === "bulk"
-            ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
-            : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"}`}>Bulk Upload</button>
-
 
       </aside>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 p-10 z-10 mt-12 justify-center ">
+      <main className="flex-1 p-4 lg:p-10 z-10 mt-6 lg:mt-12 justify-center ">
         {activeView === "bulk" && <BulkUserUpload />}
 
         {activeView === "dashboard" && (
