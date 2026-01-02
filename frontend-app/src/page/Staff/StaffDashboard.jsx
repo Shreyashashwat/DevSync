@@ -141,7 +141,7 @@ export default function StaffDashboard() {
       <div className="absolute w-[500px] h-[500px] bg-blue-600 blur-[150px] opacity-20 top-[-100px] left-[-100px]"></div>
       <div className="absolute w-[500px] h-[500px] bg-cyan-400 blur-[150px] opacity-20 bottom-[-100px] right-[-100px]"></div>
 
-      <div className="min-h-screen w-full relative z-10 p-6">
+      <div className="min-h-screen w-full relative z-10 p-6 pt-24 lg:pt-28">
 
         {/* HEADER */}
         <div className="w-full h-20 bg-[#020b1c]/80 backdrop-blur-xl flex items-center justify-center px-6 border-b border-cyan-500/30 mt-14 shadow-[0_0_15px_rgba(0,243,255,0.2)] rounded-xl">

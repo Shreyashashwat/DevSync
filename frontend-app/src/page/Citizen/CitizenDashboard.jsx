@@ -42,7 +42,7 @@ export default function CitizenDashboard() {
     );
 
   return (
-    <div className="flex min-h-screen text-white font-inter relative overflow-hidden">
+    <div className="flex flex-col lg:flex-row min-h-screen text-white font-inter relative overflow-hidden pt-20">
 
       <div className="absolute inset-0 bg-[#020b1c]" />
 
@@ -52,19 +52,19 @@ export default function CitizenDashboard() {
       <div className="absolute w-[400px] h-[400px] bg-cyan-400 blur-[150px] opacity-20 bottom-[-100px] right-[-100px]" />
 
       {/* SIDEBAR */}
-      <aside className="w-64 z-20 bg-[#020b1c]/80 backdrop-blur-xl
-        border-r border-cyan-500/30 p-6 rounded-r-2xl
-        shadow-[5px_0_30px_rgba(0,243,255,0.1)]">
+      <aside className="w-full lg:w-64 z-20 bg-[#020b1c]/80 backdrop-blur-xl
+        border-b lg:border-b-0 lg:border-r border-cyan-500/30 p-6 rounded-b-2xl lg:rounded-b-none lg:rounded-r-2xl
+        shadow-[0_5px_30px_rgba(0,243,255,0.1)] lg:shadow-[5px_0_30px_rgba(0,243,255,0.1)]">
 
-        <h2 className="font-orbitron text-2xl font-bold text-cyan-400 tracking-wide mt-13 mb-10 drop-shadow-[0_0_10px_rgba(0,243,255,0.5)]">
+        <h2 className="font-orbitron text-2xl font-bold text-cyan-400 tracking-wide mt-4 lg:mt-13 mb-6 lg:mb-10 drop-shadow-[0_0_10px_rgba(0,243,255,0.5)]">
           Dashboard
         </h2>
 
-        <div className="space-y-5">
+        <div className="flex lg:block space-x-4 lg:space-x-0 lg:space-y-5 overflow-x-auto pb-2 lg:pb-0">
 
           {/* My Complaints */}
           <button
-            className={`w-full px-5 py-3 text-left rounded-lg transition font-semibold tracking-wide
+            className={`w-auto lg:w-full px-5 py-3 text-left rounded-lg transition font-semibold tracking-wide whitespace-nowrap
               ${activeMenu === "lifecycle"
                 ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
                 : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
@@ -76,7 +76,7 @@ export default function CitizenDashboard() {
 
           {/* Submit Complaint */}
           <button
-            className={`w-full px-5 py-3 text-left rounded-lg transition font-semibold tracking-wide
+            className={`w-auto lg:w-full px-5 py-3 text-left rounded-lg transition font-semibold tracking-wide whitespace-nowrap
               ${activeMenu === "complaint-form"
                 ? "bg-cyan-500/20 border border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
                 : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
@@ -89,7 +89,7 @@ export default function CitizenDashboard() {
         </div>
       </aside>
 
-      <main className="flex-1 p-10 z-20">
+      <main className="flex-1 p-4 lg:p-10 z-20">
 
         {/* Submit Complaint Panel */}
         {activeMenu === "complaint-form" && (
