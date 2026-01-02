@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import axiosInstance from "../../api/axiosInstance";
-import { Rating } from "@smastrom/react-rating";
+import { Rating, Star } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 
 import CommentSection from "./CommentSection";
@@ -50,7 +50,7 @@ export default function ComplaintLifecycle() {
     }
 
     try {
-      const res = await axios.get("http://localhost:5000/api/complaints", {
+      const res = await axiosInstance.get("/api/complaints", {
         headers: { "x-auth-token": token },
       });
 
@@ -160,8 +160,8 @@ export default function ComplaintLifecycle() {
     const complaint = complaints.find((c) => c._id === complaintId);
     if (!complaint?.assigned_to?._id) return;
 
-    await axios.post(
-      `http://localhost:5000/api/users/${complaint.assigned_to._id}/rate`,
+    await axiosInstance.post(
+      `/api/users/${complaint.assigned_to._id}/rate`,
       { rating: ratingValue },
       { headers: { "x-auth-token": token } }
     );
@@ -268,7 +268,7 @@ export default function ComplaintLifecycle() {
                       handleRatingChange(c._id, r);
                     }}
                     itemStyles={{
-                      itemShapes: 'start',
+                      itemShapes: Star,
                       activeFillColor: '#00f3ff',
                       inactiveFillColor: 'rgba(0, 243, 255, 0.2)'
                     }}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import axiosInstance from "../../api/axiosInstance";
 
 const ComplaintForm = ({ neon }) => {
   const [formData, setFormData] = useState({
@@ -69,8 +70,8 @@ const ComplaintForm = ({ neon }) => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.post(
-        "http://localhost:5000/api/complaints",
+      const res = await axiosInstance.post(
+        "/api/complaints",
         data,
         { headers: { Authorization: `Bearer ${token}` } }
       );

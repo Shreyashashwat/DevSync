@@ -31,7 +31,8 @@ console.log(">>> WORKING DIRECTORY:", process.cwd());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: ["http://localhost:3000","http://localhost:5173", "http://localhost:5174"]
+  origin: ["https://frontend-production-9e21.up.railway.app","https://courteous-amazement-production-bee7.up.railway.app","http://localhost:3000","http://localhost:5173", "http://localhost:5174"],
+  credentials:true
 }));
 
 
