@@ -80,9 +80,11 @@ const ComplaintForm = ({ neon }) => {
       alert("Complaint submitted successfully!");
 
       // OPTIONAL: show AI result returned from backend
-      if (res.data.complaint?.category && res.data.complaint?.priority) {
-  const category = res.data.complaint.category;
-  const priority = res.data.complaint.priority;
+ const complaint = res.data.complaint || res.data;
+
+if (complaint?.category && complaint?.priority) {
+  const category = complaint.category;
+  const priority = complaint.priority;
 
   setAiPreview({ category, priority });
 
@@ -92,6 +94,7 @@ const ComplaintForm = ({ neon }) => {
 } else {
   alert("Complaint submitted successfully!");
 }
+
 
       setFormData({
         title: "",
