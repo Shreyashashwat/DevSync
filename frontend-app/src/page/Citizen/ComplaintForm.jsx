@@ -77,7 +77,7 @@ const ComplaintForm = ({ neon }) => {
       );
 
       // ✅ backend already predicted & saved
-      alert("Complaint submitted successfully!");
+      alert("Complaint submitted successfully22!");
 
       // OPTIONAL: show AI result returned from backend
       console.log("FULL RESPONSE:", res);
