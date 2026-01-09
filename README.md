@@ -24,7 +24,7 @@ Fault reporting is typically poorly organized, often spread across WhatsApp mess
 - Delays in resolution  
 - No visibility into issue trends  
 
-POWER-GRIFO centralizes this entire workflow into one application.
+POWER-GRID centralizes this entire workflow into one application.
 
 ---
 
@@ -180,6 +180,11 @@ npm run dev
 ### Complaint Form 
 <p align="center">
   <img src="./frontend-app/src/assets/form.jpeg?raw=true" width="700" />
+</p>
+
+### Chat-Bot
+<p align="center">
+  <img src="./frontend-app/src/assets/chatbot.jpeg?raw=true" width="700" />
 </p>
 
 
