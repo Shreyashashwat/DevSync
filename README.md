@@ -168,17 +168,17 @@ npm run dev
 
 ### Login Page
 <p align="center">
-  <img src="./frontend-app/src/assets/login.png?raw=true" width="450" />
+  <img src="./frontend-app/src/assets/login.jpeg?raw=true" width="450" />
 </p>
 
 ### Admin Dashboard with Stats
 <p align="center">
-  <img src="./frontend-app/src/assets/admin.png?raw=true" width="700" />
+  <img src="./frontend-app/src/assets/admin.jpeg?raw=true" width="700" />
 </p>
 
-### SLA Timer 
+### Complaint Form 
 <p align="center">
-  <img src="./frontend-app/src/assets/staff.png?raw=true" width="700" />
+  <img src="./frontend-app/src/assets/form.jpeg?raw=true" width="700" />
 </p>
 
 
@@ -211,16 +211,6 @@ npm run dev
 | Jhalak Yadav |  https://github.com/Jhalak3211 |
 | Ishita Singh|  https://github.com/ishu810 |
 | Kanak Mohan Jee|  https://github.com/kanakmohanj|
-
----
-
-## 15. Future Improvements
-
-- Email scheduling and reminders  
-- PDF/CSV report export  
-- Data analytics charts  
-- WebSocket based live updates  
-- Dedicated admin audit logs  
 
 ---
 
