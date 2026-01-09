@@ -184,7 +184,7 @@ npm run dev
 
 ### Chat-Bot
 <p align="center">
-  <img src="./frontend-app/src/assets/chatbot.jpeg?raw=true" width="700" />
+  <img src="./frontend-app/src/assets/chatbot.png?raw=true" width="700" />
 </p>
 
 
