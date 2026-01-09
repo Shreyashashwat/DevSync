@@ -80,12 +80,18 @@ const ComplaintForm = ({ neon }) => {
       alert("Complaint submitted successfully!");
 
       // OPTIONAL: show AI result returned from backend
-      if (res.data.category && res.data.priority) {
-        setAiPreview({
-          category: res.data.complaint.category,
-          priority: res.data.complaint.priority,
-        });
-      }
+      if (res.data.complaint?.category && res.data.complaint?.priority) {
+  const category = res.data.complaint.category;
+  const priority = res.data.complaint.priority;
+
+  setAiPreview({ category, priority });
+
+  alert(
+    `Complaint submitted successfully!\n\nDetected Category: ${category}\nDetected Priority: ${priority}`
+  );
+} else {
+  alert("Complaint submitted successfully!");
+}
 
       setFormData({
         title: "",
