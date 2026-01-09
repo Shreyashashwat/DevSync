@@ -1,14 +1,15 @@
 <p align="center">
-  <img src="./frontend-app/src/assets/logo.png?raw=true" width="450" />
+  <img src="./frontend-app/src/assets/logo1.jpeg?raw=true" width="450" />
 </p>
 
-# POWER-GRIFO — Fault Analyzer
+
+
 
 ---
 
 ## 1. Overview
 
-POWER-GRIFO is a full-stack fault tracking and management system.  
+POWER-GRID is a full-stack fault tracking and management system.  
 Users can submit complaints with relevant information, and administrators can monitor, assign, and review issues from a single dashboard. The goal is to simplify fault logging, reduce repeated issues, and improve resolution time through clear analytics.
 
 ---
@@ -151,7 +152,7 @@ REDIS_URL=value
 
 Start backend:
 
-npm run dev
+npm run server
 
 ### Frontend
 
@@ -214,7 +215,7 @@ npm run dev
 
 ---
 
-## 16. GitHub Checklist
+## 15. GitHub Checklist
 
 - `.env` added to `.gitignore`  
 - Screenshots included  
