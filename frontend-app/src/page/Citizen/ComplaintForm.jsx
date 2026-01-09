@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import axiosInstance from "../../api/axiosInstance";
 
 const ComplaintForm = ({ neon }) => {
   const [formData, setFormData] = useState({
@@ -69,8 +70,8 @@ const ComplaintForm = ({ neon }) => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.post(
-        "http://localhost:5000/api/complaints",
+      const res = await axiosInstance.post(
+        "/api/complaints",
         data,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -79,12 +80,21 @@ const ComplaintForm = ({ neon }) => {
       alert("Complaint submitted successfully!");
 
       // OPTIONAL: show AI result returned from backend
-      if (res.data.category && res.data.priority) {
-        setAiPreview({
-          category: res.data.complaint.category,
-          priority: res.data.complaint.priority,
-        });
-      }
+ const complaint = res.data.complaint || res.data;
+
+if (complaint?.category && complaint?.priority) {
+  const category = complaint.category;
+  const priority = complaint.priority;
+
+  setAiPreview({ category, priority });
+
+  alert(
+    `Complaint submitted successfully!\n\nDetected Category: ${category}\nDetected Priority: ${priority}`
+  );
+} else {
+  alert("Complaint submitted successfully!");
+}
+
 
       setFormData({
         title: "",

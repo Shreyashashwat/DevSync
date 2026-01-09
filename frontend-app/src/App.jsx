@@ -80,44 +80,16 @@ export function AuthButtons() {
     navigate("/login");
   };
 
-  const baseBtn = {
-    padding: "8px 24px",
-    borderRadius: "4px", // More angular for sci-fi feel
-    fontWeight: 600,
-    textDecoration: "none",
-    backdropFilter: "blur(4px)",
-    transition: "all 0.3s ease",
-    cursor: "pointer",
-    fontFamily: '"Orbitron", sans-serif', // Use theme font
-    letterSpacing: "1px",
-    textTransform: "uppercase",
-    fontSize: "0.9rem",
-  };
+  const btnBase = "px-4 py-2 rounded font-orbitron font-semibold text-xs md:text-sm uppercase tracking-wider transition-all duration-300 backdrop-blur-sm";
 
   return (
-    <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+    <div className="flex gap-3 md:gap-4 items-center z-50">
       {!token ? (
         <>
           {/* Register - Cyan Theme */}
           <Link
             to="/register"
-            style={{
-              ...baseBtn,
-              background: "rgba(0, 243, 255, 0.1)",
-              border: `1px solid ${THEME.cyan}`,
-              color: THEME.cyan,
-              boxShadow: "0 0 10px rgba(0, 243, 255, 0.1)",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = "rgba(0, 243, 255, 0.2)";
-              e.target.style.boxShadow = "0 0 20px rgba(0, 243, 255, 0.4)";
-              e.target.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "rgba(0, 243, 255, 0.1)";
-              e.target.style.boxShadow = "0 0 10px rgba(0, 243, 255, 0.1)";
-              e.target.style.transform = "translateY(0)";
-            }}
+            className={`${btnBase} bg-cyan-400/10 border border-cyan-400 text-cyan-400 hover:bg-cyan-400/20 hover:text-white hover:shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:-translate-y-0.5`}
           >
             Register
           </Link>
@@ -125,24 +97,7 @@ export function AuthButtons() {
           {/* Login - Blue Theme */}
           <Link
             to="/login"
-            style={{
-              ...baseBtn,
-              background: "rgba(0, 102, 255, 0.1)",
-              border: `1px solid ${THEME.blue}`,
-              color: "#4db8ff",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = "rgba(0, 102, 255, 0.25)";
-              e.target.style.boxShadow = "0 0 20px rgba(0, 102, 255, 0.5)";
-              e.target.style.color = "white";
-              e.target.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "rgba(0, 102, 255, 0.1)";
-              e.target.style.boxShadow = "none";
-              e.target.style.color = "#4db8ff";
-              e.target.style.transform = "translateY(0)";
-            }}
+            className={`${btnBase} bg-blue-600/10 border border-blue-600 text-[#4db8ff] hover:bg-blue-600/20 hover:text-white hover:shadow-[0_0_20px_rgba(0,102,255,0.4)] hover:-translate-y-0.5`}
           >
             Login
           </Link>
@@ -151,20 +106,7 @@ export function AuthButtons() {
         /* Logout */
         <button
           onClick={handleLogout}
-          style={{
-            ...baseBtn,
-            background: "rgba(212,24,31,0.15)",
-            border: "1px solid rgba(212,24,31,0.5)",
-            color: "#ff4d4d",
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.boxShadow = "0 0 15px rgba(212,24,31,0.6)";
-            e.target.style.background = "rgba(212,24,31,0.25)";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.boxShadow = "none";
-            e.target.style.background = "rgba(212,24,31,0.15)";
-          }}
+          className={`${btnBase} bg-red-500/10 border border-red-500 text-red-400 hover:bg-red-500/20 hover:text-white hover:shadow-[0_0_15px_rgba(239,68,68,0.6)]`}
         >
           Logout
         </button>
@@ -176,48 +118,18 @@ export function AuthButtons() {
 
 function Navbar() {
   return (
-    <nav
-      style={{
-        position: "fixed",
-        top: 0,
-        width: "100%",
-        height: "80px",
-        display: "flex",
-        justifyContent: "flex-end", // Align buttons to the right
-        alignItems: "center",
-        padding: "0 40px",
-        background: "rgba(2, 11, 28, 0.6)", // Darker semi-transparent bg
-        backdropFilter: "blur(12px)",
-        borderBottom: `1px solid ${THEME.glassBorder}`,
-        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.3)",
-        zIndex: 999,
-      }}
-    >
+    <nav className="fixed top-0 w-full h-20 flex justify-end items-center px-4 md:px-10 bg-[#020b1c]/80 backdrop-blur-xl border-b border-cyan-500/30 shadow-[0_4px_30px_rgba(0,0,0,0.3)] z-[999]">
 
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      {/* CENTER LOGO */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 flex justify-center items-center pointer-events-none">
         <img
           src={logo}
           alt="Logo"
-          style={{
-            height: "80px", // Slightly larger
-            width: "auto",
-            objectFit: "contain",
-            filter: "drop-shadow(0 0 8px rgba(0, 243, 255, 0.3))", // Cyan glow
-          }}
+          className="h-12 md:h-16 lg:h-20 w-auto object-contain drop-shadow-[0_0_8px_rgba(0,243,255,0.3)]"
         />
       </div>
+
       <AuthButtons />
-
-
     </nav>
   );
 }
