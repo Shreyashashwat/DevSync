@@ -80,6 +80,9 @@ const ComplaintForm = ({ neon }) => {
       alert("Complaint submitted successfully!");
 
       // OPTIONAL: show AI result returned from backend
+      console.log("FULL RESPONSE:", res);
+console.log("DATA:", res.data);
+
  const complaint = res.data.complaint || res.data;
 
 if (complaint?.category && complaint?.priority) {
